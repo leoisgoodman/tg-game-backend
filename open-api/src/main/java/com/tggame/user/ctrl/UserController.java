@@ -6,12 +6,19 @@ package com.tggame.user.ctrl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.exceptions.GroupException;
 import com.tggame.exceptions.UserException;
+import com.tggame.group.entity.Group;
+import com.tggame.group.entity.GroupStatus;
+import com.tggame.group.service.GroupService;
+import com.tggame.group.vo.LeftGroupVO;
 import com.tggame.user.entity.User;
+import com.tggame.user.entity.UserStatus;
 import com.tggame.user.service.UserService;
 import com.tggame.user.vo.UserPageVO;
 import com.tggame.user.vo.UserSaveVO;
@@ -24,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +46,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
 
     /**
@@ -215,6 +226,37 @@ public class UserController {
             return iPage;
         }
         return new Page<>();
+    }
+
+
+    /**
+     * 退群
+     *
+     * @return R
+     */
+    @ApiOperation(value = "退群", notes = "退群")
+    @PutMapping("/left")
+    public boolean left(@ApiParam(name = "退群", value = "传入json格式", required = true)
+                        @RequestBody LeftGroupVO leftGroupVO) {
+        if (StringUtils.isBlank(leftGroupVO.getTgGroupId())) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        if (StringUtils.isBlank(leftGroupVO.getTgUserId())) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, leftGroupVO.getTgGroupId())
+                .eq(Group::getStatus, GroupStatus.Enable));
+
+        Group newGroup = new Group();
+        BeanUtils.copyProperties(leftGroupVO, newGroup);
+        boolean isUpdated = userService.update(new UpdateWrapper<User>().lambda()
+                .set(User::getStatus, UserStatus.Left_Group)
+                .set(User::getUpdateTime, new Date())
+                .eq(User::getGroupId, group.getId())
+                .eq(User::getTgUserId, leftGroupVO.getTgUserId()));
+        return isUpdated;
     }
 
 

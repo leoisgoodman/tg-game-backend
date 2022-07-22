@@ -12,6 +12,7 @@ public enum UserStatus implements java.io.Serializable {
     Verify_Banker("庄审核"),
     Enable("可投注"),
     Disable("禁止投注"),
+    Left_Group("退群"),
     ;
 
     public String val;
