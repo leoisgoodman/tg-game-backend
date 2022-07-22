@@ -6,7 +6,6 @@ import java.security.Security;
 
 /**
  * 加密基类
- *
  */
 public abstract class SecurityCoder {
     private static Byte ADDFLAG = 0;

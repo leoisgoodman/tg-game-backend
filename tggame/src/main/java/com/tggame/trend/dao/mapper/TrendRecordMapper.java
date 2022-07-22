@@ -1,7 +1,7 @@
 package com.tggame.trend.dao.mapper;
 
-import com.tggame.trend.entity.TrendRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.trend.entity.TrendRecord;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,8 +1,8 @@
 package com.tggame.tg.dao;
 
+import com.tggame.core.base.BaseDAO;
 import com.tggame.tg.dao.mapper.TgUserFlowMapper;
 import com.tggame.tg.entity.TgUserFlow;
-import com.tggame.core.base.BaseDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

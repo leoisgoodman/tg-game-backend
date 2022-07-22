@@ -10,7 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * HMAC加密组件
- *
  */
 public abstract class HmacCoder extends SecurityCoder {
 

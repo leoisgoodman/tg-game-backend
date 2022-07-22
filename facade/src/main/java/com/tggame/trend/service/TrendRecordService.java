@@ -3,11 +3,8 @@
  */
 package com.tggame.trend.service;
 
-import com.tggame.trend.entity.TrendRecord;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.trend.entity.TrendRecord;
 
 /**
  * 走势记录

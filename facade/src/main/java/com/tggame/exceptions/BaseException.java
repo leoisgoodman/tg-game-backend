@@ -1,9 +1,8 @@
 /*
-* tg学习代码
+ * tg学习代码
  */
-package com.tggame.core.exceptions;
+package com.tggame.exceptions;
 
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +18,12 @@ public class BaseException extends RuntimeException implements Serializable {
 
     public BaseException(BaseExceptionEnum exceptionMessage) {
         super(exceptionMessage.toString());
-        logger.error("系统发生异常[{}]", exceptionMessage.toString());
+        logger.error("系统发生异常[{}]", exceptionMessage);
     }
 
     public BaseException(BaseExceptionEnum exceptionMessage, Object... params) {
         super(exceptionMessage.toString());
-        logger.error("系统发生异常[{}],参数为[{}]", exceptionMessage.toString(), JSON.toJSONString(params));
+        logger.error("系统发生异常[{}],参数为[{}]", exceptionMessage, params);
     }
 
 
@@ -61,6 +60,11 @@ public class BaseException extends RuntimeException implements Serializable {
         public String code;//错误编码
         public String msg;//错误信息
 
+        BaseExceptionEnum(String code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
         //信息提示：不存在
         private static String not_exist(String arg) {
             return arg + " does not exist";
@@ -74,11 +78,6 @@ public class BaseException extends RuntimeException implements Serializable {
         //信息提示：添加失败
         private static String add_failed(String arg) {
             return "add " + arg + " failed";
-        }
-
-        BaseExceptionEnum(String code, String msg) {
-            this.code = code;
-            this.msg = msg;
         }
 
         @Override

@@ -3,7 +3,8 @@ package com.tggame.core.enums;
 public enum Gender {
     Male("男"),
     Female("女"),
-    Other("其他"),;
+    Other("其他"),
+    ;
     public String val;
 
     Gender(String val) {

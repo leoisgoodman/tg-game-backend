@@ -9,29 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DateTools {
-    //时间字符串 年月日时分秒
-    public static SimpleDateFormat yyyyMMDDHHmmssFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    //时间字符串 年月日时分
-    public static SimpleDateFormat yyyyMMDDHHmmFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-    //时间字符串 年月日
-    public static SimpleDateFormat yyyyMMDDFmt = new SimpleDateFormat("yyyy-MM-dd");
-
-    //时间字符串 时分秒
-    public static SimpleDateFormat HHmmssFmt = new SimpleDateFormat("HH:mm:ss");
-
-    //时间字符串 时分
-    public static SimpleDateFormat HHmmFmt = new SimpleDateFormat("HH:mm");
-
-    //格式化成统一utc时间格式
-    public static SimpleDateFormat utcFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-
-
-    //星期
-    private static String[] weekDay = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
-
-
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd"; // 默认的日期格式
     public static final DateFormat[] ACCEPT_DATE_FORMATS = { // 定义可被转换成日期对象的字符串格式
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
@@ -45,6 +22,20 @@ public class DateTools {
             new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"),
             new SimpleDateFormat("yyyy-MM"), new SimpleDateFormat("yyyy")
     };
+    //时间字符串 年月日时分秒
+    public static SimpleDateFormat yyyyMMDDHHmmssFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //时间字符串 年月日时分
+    public static SimpleDateFormat yyyyMMDDHHmmFmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    //时间字符串 年月日
+    public static SimpleDateFormat yyyyMMDDFmt = new SimpleDateFormat("yyyy-MM-dd");
+    //时间字符串 时分秒
+    public static SimpleDateFormat HHmmssFmt = new SimpleDateFormat("HH:mm:ss");
+    //时间字符串 时分
+    public static SimpleDateFormat HHmmFmt = new SimpleDateFormat("HH:mm");
+    //格式化成统一utc时间格式
+    public static SimpleDateFormat utcFmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+    //星期
+    private static String[] weekDay = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 
     /**
      * 测试的main方法.
@@ -1039,8 +1030,9 @@ public class DateTools {
 
     /**
      * 获取当前年
-     *
+     * <p>
      * .0
+     *
      * @2017-3-22 16:13:15
      */
     public static Integer getCurYear() {
@@ -1052,8 +1044,9 @@ public class DateTools {
 
     /**
      * 获取当前月
-     *
+     * <p>
      * .0
+     *
      * @2017-3-22 16:13:20
      */
     public static Integer getCurMonth() {
@@ -1064,8 +1057,9 @@ public class DateTools {
 
     /**
      * 获取当前日期
-     *
+     * <p>
      * .0
+     *
      * @2017-3-22 16:13:24
      */
     public static Integer getCurDate() {
@@ -1076,8 +1070,9 @@ public class DateTools {
 
     /**
      * 获取当前周几
-     *
+     * <p>
      * .0
+     *
      * @2017-3-22 16:13:29
      */
     public static String getCurDay() {

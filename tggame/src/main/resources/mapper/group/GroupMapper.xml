@@ -16,7 +16,8 @@
 
 
     <sql id="columns">
-    id,merchant_id,name,tg_group_id,tg_game_code,domain,status,create_time,summary,game_summary
+        id
+        ,merchant_id,name,tg_group_id,tg_game_code,domain,status,create_time,summary,game_summary
     </sql>
 
     <sql id="where">

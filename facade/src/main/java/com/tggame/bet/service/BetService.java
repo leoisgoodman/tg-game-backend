@@ -3,11 +3,8 @@
  */
 package com.tggame.bet.service;
 
-import com.tggame.bet.entity.Bet;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.bet.entity.Bet;
 
 /**
  * 玩法

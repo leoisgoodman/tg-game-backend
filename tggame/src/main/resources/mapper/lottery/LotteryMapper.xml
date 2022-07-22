@@ -12,7 +12,8 @@
 
 
     <sql id="columns">
-    id,name,pre_id,code,status,summary
+        id
+        ,name,pre_id,code,status,summary
     </sql>
 
     <sql id="where">

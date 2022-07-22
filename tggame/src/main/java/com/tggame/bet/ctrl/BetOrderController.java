@@ -3,20 +3,19 @@
  */
 package com.tggame.bet.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.bet.entity.BetOrder;
 import com.tggame.bet.service.BetOrderService;
 import com.tggame.bet.vo.BetOrderPageVO;
 import com.tggame.bet.vo.BetOrderSaveVO;
 import com.tggame.bet.vo.BetOrderVO;
-import com.tggame.core.exceptions.BetOrderException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
 import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.BetOrderException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class BetOrderController {
     @ApiOperation(value = "创建BetOrder", notes = "创建BetOrder")
     @PostMapping("/build")
     public BetOrderSaveVO build(@ApiParam(name = "创建BetOrder", value = "传入json格式", required = true)
-                                   @RequestBody BetOrderSaveVO betOrderSaveVO) {
+                                @RequestBody BetOrderSaveVO betOrderSaveVO) {
         if (StringUtils.isBlank(betOrderSaveVO.getId())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -83,59 +82,41 @@ public class BetOrderController {
         if (StringUtils.isBlank(betOrderSaveVO.getBetNum())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(betOrderSaveVO.getOdds())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(betOrderSaveVO.getBetType())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(betOrderSaveVO.getPayBackPercent())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getAmount())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getWinAmount())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getShouldPayAmount())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(betOrderSaveVO.getStatus())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
         if (StringUtils.isBlank(betOrderSaveVO.getOpenId())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(betOrderSaveVO.getCreateTime())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getUpdateTime())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
 
         int count = betOrderService.count(new LambdaQueryWrapper<BetOrder>()
                 .eq(BetOrder::getId, betOrderSaveVO.getId())
-                        .eq(BetOrder::getGroupId, betOrderSaveVO.getGroupId())
-                        .eq(BetOrder::getTgGroupId, betOrderSaveVO.getTgGroupId())
-                        .eq(BetOrder::getUserId, betOrderSaveVO.getUserId())
-                        .eq(BetOrder::getTgUserId, betOrderSaveVO.getTgUserId())
-                        .eq(BetOrder::getBotId, betOrderSaveVO.getBotId())
-                        .eq(BetOrder::getLotteryId, betOrderSaveVO.getLotteryId())
-                        .eq(BetOrder::getLotteryName, betOrderSaveVO.getLotteryName())
-                        .eq(BetOrder::getBetId, betOrderSaveVO.getBetId())
-                        .eq(BetOrder::getBetName, betOrderSaveVO.getBetName())
-                        .eq(BetOrder::getBetNum, betOrderSaveVO.getBetNum())
-                        .eq(BetOrder::getOdds, betOrderSaveVO.getOdds())
-                        .eq(BetOrder::getBetType, betOrderSaveVO.getBetType())
-                        .eq(BetOrder::getPayBackPercent, betOrderSaveVO.getPayBackPercent())
-                        .eq(BetOrder::getAmount, betOrderSaveVO.getAmount())
-                        .eq(BetOrder::getWinAmount, betOrderSaveVO.getWinAmount())
-                        .eq(BetOrder::getShouldPayAmount, betOrderSaveVO.getShouldPayAmount())
-                        .eq(BetOrder::getStatus, betOrderSaveVO.getStatus())
-                        .eq(BetOrder::getOpenId, betOrderSaveVO.getOpenId())
-                        .eq(BetOrder::getCreateTime, betOrderSaveVO.getCreateTime())
-                        .eq(BetOrder::getUpdateTime, betOrderSaveVO.getUpdateTime())
+                .eq(BetOrder::getGroupId, betOrderSaveVO.getGroupId())
+                .eq(BetOrder::getTgGroupId, betOrderSaveVO.getTgGroupId())
+                .eq(BetOrder::getUserId, betOrderSaveVO.getUserId())
+                .eq(BetOrder::getTgUserId, betOrderSaveVO.getTgUserId())
+                .eq(BetOrder::getBotId, betOrderSaveVO.getBotId())
+                .eq(BetOrder::getLotteryId, betOrderSaveVO.getLotteryId())
+                .eq(BetOrder::getLotteryName, betOrderSaveVO.getLotteryName())
+                .eq(BetOrder::getBetId, betOrderSaveVO.getBetId())
+                .eq(BetOrder::getBetName, betOrderSaveVO.getBetName())
+                .eq(BetOrder::getBetNum, betOrderSaveVO.getBetNum())
+                .eq(BetOrder::getOdds, betOrderSaveVO.getOdds())
+                .eq(BetOrder::getBetType, betOrderSaveVO.getBetType())
+                .eq(BetOrder::getPayBackPercent, betOrderSaveVO.getPayBackPercent())
+                .eq(BetOrder::getAmount, betOrderSaveVO.getAmount())
+                .eq(BetOrder::getWinAmount, betOrderSaveVO.getWinAmount())
+                .eq(BetOrder::getShouldPayAmount, betOrderSaveVO.getShouldPayAmount())
+                .eq(BetOrder::getStatus, betOrderSaveVO.getStatus())
+                .eq(BetOrder::getOpenId, betOrderSaveVO.getOpenId())
+                .eq(BetOrder::getCreateTime, betOrderSaveVO.getCreateTime())
+                .eq(BetOrder::getUpdateTime, betOrderSaveVO.getUpdateTime())
         );
         if (count > 0) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Exists);
@@ -234,7 +215,7 @@ public class BetOrderController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(BetOrder::getId);
 
-            IPage<BetOrder> betOrderPage = betOrderService.page(page,queryWrapper);
+            IPage<BetOrder> betOrderPage = betOrderService.page(page, queryWrapper);
             List<BetOrderPageVO> betOrderPageVOList = JSON.parseArray(JSON.toJSONString(betOrderPage.getRecords()), BetOrderPageVO.class);
             IPage<BetOrderPageVO> iPage = new Page<>();
             iPage.setPages(betOrderPage.getPages());

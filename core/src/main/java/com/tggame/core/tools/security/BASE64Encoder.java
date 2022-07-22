@@ -27,6 +27,15 @@ public class BASE64Encoder {
 
     private static final byte[] pem_convert_array = new byte[256];
 
+    static {
+        for (int i = 0; i < 255; i++) {
+            pem_convert_array[i] = -1;
+        }
+        for (int i = 0; i < PEM_ARRAY.length; i++) {
+            pem_convert_array[PEM_ARRAY[i]] = (byte) i;
+        }
+    }
+
     private byte[] decode_buffer = new byte[4];
 
     public BASE64Encoder() {
@@ -190,14 +199,5 @@ public class BASE64Encoder {
             paramArrayOfByte[(i + paramInt1)] = (byte) j;
         }
         return paramInt2;
-    }
-
-    static {
-        for (int i = 0; i < 255; i++) {
-            pem_convert_array[i] = -1;
-        }
-        for (int i = 0; i < PEM_ARRAY.length; i++) {
-            pem_convert_array[PEM_ARRAY[i]] = (byte) i;
-        }
     }
 }

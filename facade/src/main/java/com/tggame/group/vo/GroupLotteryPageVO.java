@@ -3,8 +3,8 @@
  */
 package com.tggame.group.vo;
 
-import io.swagger.annotations.ApiModelProperty;
 import com.tggame.core.base.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**

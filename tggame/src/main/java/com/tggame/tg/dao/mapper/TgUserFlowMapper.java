@@ -1,7 +1,7 @@
 package com.tggame.tg.dao.mapper;
 
-import com.tggame.tg.entity.TgUserFlow;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.tg.entity.TgUserFlow;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -3,20 +3,19 @@
  */
 package com.tggame.bot.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.bot.entity.Bot;
 import com.tggame.bot.service.BotService;
 import com.tggame.bot.vo.BotPageVO;
 import com.tggame.bot.vo.BotSaveVO;
 import com.tggame.bot.vo.BotVO;
-import com.tggame.core.exceptions.BotException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
 import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.BotException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class BotController {
     @ApiOperation(value = "创建Bot", notes = "创建Bot")
     @PostMapping("/build")
     public BotSaveVO build(@ApiParam(name = "创建Bot", value = "传入json格式", required = true)
-                                   @RequestBody BotSaveVO botSaveVO) {
+                           @RequestBody BotSaveVO botSaveVO) {
         if (StringUtils.isBlank(botSaveVO.getId())) {
             throw new BotException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -74,24 +73,19 @@ public class BotController {
         if (StringUtils.isBlank(botSaveVO.getStatus())) {
             throw new BotException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(botSaveVO.getCreateTime())) {
-            throw new BotException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(botSaveVO.getUpdateTime())) {
-            throw new BotException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
 
         int count = botService.count(new LambdaQueryWrapper<Bot>()
                 .eq(Bot::getId, botSaveVO.getId())
-                        .eq(Bot::getTgBotId, botSaveVO.getTgBotId())
-                        .eq(Bot::getName, botSaveVO.getName())
-                        .eq(Bot::getTgToken, botSaveVO.getTgToken())
-                        .eq(Bot::getBotOwnerUsername, botSaveVO.getBotOwnerUsername())
-                        .eq(Bot::getTgPhone, botSaveVO.getTgPhone())
-                        .eq(Bot::getShareLink, botSaveVO.getShareLink())
-                        .eq(Bot::getStatus, botSaveVO.getStatus())
-                        .eq(Bot::getCreateTime, botSaveVO.getCreateTime())
-                        .eq(Bot::getUpdateTime, botSaveVO.getUpdateTime())
+                .eq(Bot::getTgBotId, botSaveVO.getTgBotId())
+                .eq(Bot::getName, botSaveVO.getName())
+                .eq(Bot::getTgToken, botSaveVO.getTgToken())
+                .eq(Bot::getBotOwnerUsername, botSaveVO.getBotOwnerUsername())
+                .eq(Bot::getTgPhone, botSaveVO.getTgPhone())
+                .eq(Bot::getShareLink, botSaveVO.getShareLink())
+                .eq(Bot::getStatus, botSaveVO.getStatus())
+                .eq(Bot::getCreateTime, botSaveVO.getCreateTime())
+                .eq(Bot::getUpdateTime, botSaveVO.getUpdateTime())
         );
         if (count > 0) {
             throw new BotException(BaseException.BaseExceptionEnum.Exists);
@@ -175,7 +169,7 @@ public class BotController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(Bot::getId);
 
-            IPage<Bot> botPage = botService.page(page,queryWrapper);
+            IPage<Bot> botPage = botService.page(page, queryWrapper);
             List<BotPageVO> botPageVOList = JSON.parseArray(JSON.toJSONString(botPage.getRecords()), BotPageVO.class);
             IPage<BotPageVO> iPage = new Page<>();
             iPage.setPages(botPage.getPages());

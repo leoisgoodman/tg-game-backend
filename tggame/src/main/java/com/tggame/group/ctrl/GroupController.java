@@ -3,20 +3,19 @@
  */
 package com.tggame.group.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.GroupException;
 import com.tggame.group.entity.Group;
 import com.tggame.group.service.GroupService;
 import com.tggame.group.vo.GroupPageVO;
 import com.tggame.group.vo.GroupSaveVO;
 import com.tggame.group.vo.GroupVO;
-import com.tggame.core.exceptions.GroupException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class GroupController {
     @ApiOperation(value = "创建Group", notes = "创建Group")
     @PostMapping("/build")
     public GroupSaveVO build(@ApiParam(name = "创建Group", value = "传入json格式", required = true)
-                                   @RequestBody GroupSaveVO groupSaveVO) {
+                             @RequestBody GroupSaveVO groupSaveVO) {
         if (StringUtils.isBlank(groupSaveVO.getId())) {
             throw new GroupException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -71,9 +70,7 @@ public class GroupController {
         if (StringUtils.isBlank(groupSaveVO.getStatus())) {
             throw new GroupException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(groupSaveVO.getCreateTime())) {
-            throw new GroupException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(groupSaveVO.getSummary())) {
             throw new GroupException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -83,15 +80,15 @@ public class GroupController {
 
         int count = groupService.count(new LambdaQueryWrapper<Group>()
                 .eq(Group::getId, groupSaveVO.getId())
-                        .eq(Group::getMerchantId, groupSaveVO.getMerchantId())
-                        .eq(Group::getName, groupSaveVO.getName())
-                        .eq(Group::getTgGroupId, groupSaveVO.getTgGroupId())
-                        .eq(Group::getTgGameCode, groupSaveVO.getTgGameCode())
-                        .eq(Group::getDomain, groupSaveVO.getDomain())
-                        .eq(Group::getStatus, groupSaveVO.getStatus())
-                        .eq(Group::getCreateTime, groupSaveVO.getCreateTime())
-                        .eq(Group::getSummary, groupSaveVO.getSummary())
-                        .eq(Group::getGameSummary, groupSaveVO.getGameSummary())
+                .eq(Group::getMerchantId, groupSaveVO.getMerchantId())
+                .eq(Group::getName, groupSaveVO.getName())
+                .eq(Group::getTgGroupId, groupSaveVO.getTgGroupId())
+                .eq(Group::getTgGameCode, groupSaveVO.getTgGameCode())
+                .eq(Group::getDomain, groupSaveVO.getDomain())
+                .eq(Group::getStatus, groupSaveVO.getStatus())
+                .eq(Group::getCreateTime, groupSaveVO.getCreateTime())
+                .eq(Group::getSummary, groupSaveVO.getSummary())
+                .eq(Group::getGameSummary, groupSaveVO.getGameSummary())
         );
         if (count > 0) {
             throw new GroupException(BaseException.BaseExceptionEnum.Exists);
@@ -161,7 +158,7 @@ public class GroupController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(Group::getId);
 
-            IPage<Group> groupPage = groupService.page(page,queryWrapper);
+            IPage<Group> groupPage = groupService.page(page, queryWrapper);
             List<GroupPageVO> groupPageVOList = JSON.parseArray(JSON.toJSONString(groupPage.getRecords()), GroupPageVO.class);
             IPage<GroupPageVO> iPage = new Page<>();
             iPage.setPages(groupPage.getPages());

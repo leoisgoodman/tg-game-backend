@@ -18,7 +18,8 @@
 
 
     <sql id="columns">
-    id,group_id,group_lottery_id,bet_id,code,min_bet_money,max_bet_money,odds,default_money,type,pay_back_percent,status
+        id
+        ,group_id,group_lottery_id,bet_id,code,min_bet_money,max_bet_money,odds,default_money,type,pay_back_percent,status
     </sql>
 
     <sql id="where">

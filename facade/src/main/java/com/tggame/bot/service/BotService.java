@@ -3,11 +3,8 @@
  */
 package com.tggame.bot.service;
 
-import com.tggame.bot.entity.Bot;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.bot.entity.Bot;
 
 /**
  * tg机器人

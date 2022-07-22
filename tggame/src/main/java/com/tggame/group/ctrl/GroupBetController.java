@@ -3,20 +3,19 @@
  */
 package com.tggame.group.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.GroupBetException;
 import com.tggame.group.entity.GroupBet;
 import com.tggame.group.service.GroupBetService;
 import com.tggame.group.vo.GroupBetPageVO;
 import com.tggame.group.vo.GroupBetSaveVO;
 import com.tggame.group.vo.GroupBetVO;
-import com.tggame.core.exceptions.GroupBetException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class GroupBetController {
     @ApiOperation(value = "创建GroupBet", notes = "创建GroupBet")
     @PostMapping("/build")
     public GroupBetSaveVO build(@ApiParam(name = "创建GroupBet", value = "传入json格式", required = true)
-                                   @RequestBody GroupBetSaveVO groupBetSaveVO) {
+                                @RequestBody GroupBetSaveVO groupBetSaveVO) {
         if (StringUtils.isBlank(groupBetSaveVO.getId())) {
             throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -65,41 +64,28 @@ public class GroupBetController {
         if (StringUtils.isBlank(groupBetSaveVO.getCode())) {
             throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(groupBetSaveVO.getMinBetMoney())) {
-            throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(groupBetSaveVO.getMaxBetMoney())) {
-            throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(groupBetSaveVO.getOdds())) {
-            throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(groupBetSaveVO.getDefaultMoney())) {
-            throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(groupBetSaveVO.getType())) {
             throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(groupBetSaveVO.getPayBackPercent())) {
-            throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(groupBetSaveVO.getStatus())) {
             throw new GroupBetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
 
         int count = groupBetService.count(new LambdaQueryWrapper<GroupBet>()
                 .eq(GroupBet::getId, groupBetSaveVO.getId())
-                        .eq(GroupBet::getGroupId, groupBetSaveVO.getGroupId())
-                        .eq(GroupBet::getGroupLotteryId, groupBetSaveVO.getGroupLotteryId())
-                        .eq(GroupBet::getBetId, groupBetSaveVO.getBetId())
-                        .eq(GroupBet::getCode, groupBetSaveVO.getCode())
-                        .eq(GroupBet::getMinBetMoney, groupBetSaveVO.getMinBetMoney())
-                        .eq(GroupBet::getMaxBetMoney, groupBetSaveVO.getMaxBetMoney())
-                        .eq(GroupBet::getOdds, groupBetSaveVO.getOdds())
-                        .eq(GroupBet::getDefaultMoney, groupBetSaveVO.getDefaultMoney())
-                        .eq(GroupBet::getType, groupBetSaveVO.getType())
-                        .eq(GroupBet::getPayBackPercent, groupBetSaveVO.getPayBackPercent())
-                        .eq(GroupBet::getStatus, groupBetSaveVO.getStatus())
+                .eq(GroupBet::getGroupId, groupBetSaveVO.getGroupId())
+                .eq(GroupBet::getGroupLotteryId, groupBetSaveVO.getGroupLotteryId())
+                .eq(GroupBet::getBetId, groupBetSaveVO.getBetId())
+                .eq(GroupBet::getCode, groupBetSaveVO.getCode())
+                .eq(GroupBet::getMinBetMoney, groupBetSaveVO.getMinBetMoney())
+                .eq(GroupBet::getMaxBetMoney, groupBetSaveVO.getMaxBetMoney())
+                .eq(GroupBet::getOdds, groupBetSaveVO.getOdds())
+                .eq(GroupBet::getDefaultMoney, groupBetSaveVO.getDefaultMoney())
+                .eq(GroupBet::getType, groupBetSaveVO.getType())
+                .eq(GroupBet::getPayBackPercent, groupBetSaveVO.getPayBackPercent())
+                .eq(GroupBet::getStatus, groupBetSaveVO.getStatus())
         );
         if (count > 0) {
             throw new GroupBetException(BaseException.BaseExceptionEnum.Exists);
@@ -157,9 +143,7 @@ public class GroupBetController {
         if (StringUtils.isNotBlank(groupBetVO.getBetId())) {
             queryWrapper.lambda().eq(GroupBet::getBetId, groupBetVO.getBetId());
         }
-        if (StringUtils.isNotBlank(groupBetVO.getDefaultMoney())) {
-            queryWrapper.lambda().eq(GroupBet::getDefaultMoney, groupBetVO.getDefaultMoney());
-        }
+
         if (StringUtils.isNotBlank(groupBetVO.getType())) {
             queryWrapper.lambda().eq(GroupBet::getType, groupBetVO.getType());
         }
@@ -170,7 +154,7 @@ public class GroupBetController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(GroupBet::getId);
 
-            IPage<GroupBet> groupBetPage = groupBetService.page(page,queryWrapper);
+            IPage<GroupBet> groupBetPage = groupBetService.page(page, queryWrapper);
             List<GroupBetPageVO> groupBetPageVOList = JSON.parseArray(JSON.toJSONString(groupBetPage.getRecords()), GroupBetPageVO.class);
             IPage<GroupBetPageVO> iPage = new Page<>();
             iPage.setPages(groupBetPage.getPages());

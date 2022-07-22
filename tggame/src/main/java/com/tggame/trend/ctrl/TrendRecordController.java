@@ -3,20 +3,19 @@
  */
 package com.tggame.trend.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.TrendRecordException;
 import com.tggame.trend.entity.TrendRecord;
 import com.tggame.trend.service.TrendRecordService;
 import com.tggame.trend.vo.TrendRecordPageVO;
 import com.tggame.trend.vo.TrendRecordSaveVO;
 import com.tggame.trend.vo.TrendRecordVO;
-import com.tggame.core.exceptions.TrendRecordException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -56,26 +55,19 @@ public class TrendRecordController {
         if (StringUtils.isBlank(trendRecordSaveVO.getLotteryId())) {
             throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(trendRecordSaveVO.getIssue())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(trendRecordSaveVO.getData())) {
             throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(trendRecordSaveVO.getOpenTime())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(trendRecordSaveVO.getCreateTime())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
 
         int count = trendRecordService.count(new LambdaQueryWrapper<TrendRecord>()
                 .eq(TrendRecord::getId, trendRecordSaveVO.getId())
-                        .eq(TrendRecord::getLotteryId, trendRecordSaveVO.getLotteryId())
-                        .eq(TrendRecord::getIssue, trendRecordSaveVO.getIssue())
-                        .eq(TrendRecord::getData, trendRecordSaveVO.getData())
-                        .eq(TrendRecord::getOpenTime, trendRecordSaveVO.getOpenTime())
-                        .eq(TrendRecord::getCreateTime, trendRecordSaveVO.getCreateTime())
+                .eq(TrendRecord::getLotteryId, trendRecordSaveVO.getLotteryId())
+                .eq(TrendRecord::getIssue, trendRecordSaveVO.getIssue())
+                .eq(TrendRecord::getData, trendRecordSaveVO.getData())
+                .eq(TrendRecord::getOpenTime, trendRecordSaveVO.getOpenTime())
+                .eq(TrendRecord::getCreateTime, trendRecordSaveVO.getCreateTime())
         );
         if (count > 0) {
             throw new TrendRecordException(BaseException.BaseExceptionEnum.Exists);
@@ -91,7 +83,6 @@ public class TrendRecordController {
         log.debug(JSON.toJSONString(trendRecordSaveVO));
         return trendRecordSaveVO;
     }
-
 
 
     /**
@@ -115,15 +106,7 @@ public class TrendRecordController {
         if (StringUtils.isNotBlank(trendRecordVO.getLotteryId())) {
             queryWrapper.lambda().eq(TrendRecord::getLotteryId, trendRecordVO.getLotteryId());
         }
-        if (trendRecordVO.getOpenTimeBegin() != null) {
-            queryWrapper.lambda().gt(TrendRecord::getOpenTime, trendRecordVO.getOpenTimeBegin());
-        }
-        if (trendRecordVO.getOpenTimeEnd() != null) {
-            queryWrapper.lambda().lt(TrendRecord::getOpenTime, trendRecordVO.getOpenTimeEnd());
-        }
-        if (trendRecordVO.getCreateTimeBegin() != null) {
-            queryWrapper.lambda().gt(TrendRecord::getCreateTime, trendRecordVO.getCreateTimeBegin());
-        }
+
         if (trendRecordVO.getCreateTimeEnd() != null) {
             queryWrapper.lambda().lt(TrendRecord::getCreateTime, trendRecordVO.getCreateTimeEnd());
         }
@@ -131,7 +114,7 @@ public class TrendRecordController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(TrendRecord::getId);
 
-            IPage<TrendRecord> trendRecordPage = trendRecordService.page(page,queryWrapper);
+            IPage<TrendRecord> trendRecordPage = trendRecordService.page(page, queryWrapper);
             List<TrendRecordPageVO> trendRecordPageVOList = JSON.parseArray(JSON.toJSONString(trendRecordPage.getRecords()), TrendRecordPageVO.class);
             IPage<TrendRecordPageVO> iPage = new Page<>();
             iPage.setPages(trendRecordPage.getPages());

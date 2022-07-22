@@ -3,20 +3,19 @@
  */
 package com.tggame.lottery.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.LotteryException;
 import com.tggame.lottery.entity.Lottery;
 import com.tggame.lottery.service.LotteryService;
 import com.tggame.lottery.vo.LotteryPageVO;
 import com.tggame.lottery.vo.LotterySaveVO;
 import com.tggame.lottery.vo.LotteryVO;
-import com.tggame.core.exceptions.LotteryException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class LotteryController {
     @ApiOperation(value = "创建Lottery", notes = "创建Lottery")
     @PostMapping("/build")
     public LotterySaveVO build(@ApiParam(name = "创建Lottery", value = "传入json格式", required = true)
-                                   @RequestBody LotterySaveVO lotterySaveVO) {
+                               @RequestBody LotterySaveVO lotterySaveVO) {
         if (StringUtils.isBlank(lotterySaveVO.getId())) {
             throw new LotteryException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -71,11 +70,11 @@ public class LotteryController {
 
         int count = lotteryService.count(new LambdaQueryWrapper<Lottery>()
                 .eq(Lottery::getId, lotterySaveVO.getId())
-                        .eq(Lottery::getName, lotterySaveVO.getName())
-                        .eq(Lottery::getPreId, lotterySaveVO.getPreId())
-                        .eq(Lottery::getCode, lotterySaveVO.getCode())
-                        .eq(Lottery::getStatus, lotterySaveVO.getStatus())
-                        .eq(Lottery::getSummary, lotterySaveVO.getSummary())
+                .eq(Lottery::getName, lotterySaveVO.getName())
+                .eq(Lottery::getPreId, lotterySaveVO.getPreId())
+                .eq(Lottery::getCode, lotterySaveVO.getCode())
+                .eq(Lottery::getStatus, lotterySaveVO.getStatus())
+                .eq(Lottery::getSummary, lotterySaveVO.getSummary())
         );
         if (count > 0) {
             throw new LotteryException(BaseException.BaseExceptionEnum.Exists);
@@ -134,7 +133,7 @@ public class LotteryController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(Lottery::getId);
 
-            IPage<Lottery> lotteryPage = lotteryService.page(page,queryWrapper);
+            IPage<Lottery> lotteryPage = lotteryService.page(page, queryWrapper);
             List<LotteryPageVO> lotteryPageVOList = JSON.parseArray(JSON.toJSONString(lotteryPage.getRecords()), LotteryPageVO.class);
             IPage<LotteryPageVO> iPage = new Page<>();
             iPage.setPages(lotteryPage.getPages());

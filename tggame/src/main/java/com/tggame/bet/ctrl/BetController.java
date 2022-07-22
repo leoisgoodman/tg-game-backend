@@ -3,20 +3,19 @@
  */
 package com.tggame.bet.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.bet.entity.Bet;
 import com.tggame.bet.service.BetService;
 import com.tggame.bet.vo.BetPageVO;
 import com.tggame.bet.vo.BetSaveVO;
 import com.tggame.bet.vo.BetVO;
-import com.tggame.core.exceptions.BetException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
 import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.BetException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class BetController {
     @ApiOperation(value = "创建Bet", notes = "创建Bet")
     @PostMapping("/build")
     public BetSaveVO build(@ApiParam(name = "创建Bet", value = "传入json格式", required = true)
-                                   @RequestBody BetSaveVO betSaveVO) {
+                           @RequestBody BetSaveVO betSaveVO) {
         if (StringUtils.isBlank(betSaveVO.getId())) {
             throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -62,24 +61,7 @@ public class BetController {
         if (StringUtils.isBlank(betSaveVO.getCode())) {
             throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(betSaveVO.getMinBetMoney())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betSaveVO.getMaxBetMoney())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betSaveVO.getOdds())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betSaveVO.getDefaultMoney())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betSaveVO.getType())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betSaveVO.getPayBackPercent())) {
-            throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(betSaveVO.getStatus())) {
             throw new BetException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -89,17 +71,17 @@ public class BetController {
 
         int count = betService.count(new LambdaQueryWrapper<Bet>()
                 .eq(Bet::getId, betSaveVO.getId())
-                        .eq(Bet::getLotteryId, betSaveVO.getLotteryId())
-                        .eq(Bet::getName, betSaveVO.getName())
-                        .eq(Bet::getCode, betSaveVO.getCode())
-                        .eq(Bet::getMinBetMoney, betSaveVO.getMinBetMoney())
-                        .eq(Bet::getMaxBetMoney, betSaveVO.getMaxBetMoney())
-                        .eq(Bet::getOdds, betSaveVO.getOdds())
-                        .eq(Bet::getDefaultMoney, betSaveVO.getDefaultMoney())
-                        .eq(Bet::getType, betSaveVO.getType())
-                        .eq(Bet::getPayBackPercent, betSaveVO.getPayBackPercent())
-                        .eq(Bet::getStatus, betSaveVO.getStatus())
-                        .eq(Bet::getSummary, betSaveVO.getSummary())
+                .eq(Bet::getLotteryId, betSaveVO.getLotteryId())
+                .eq(Bet::getName, betSaveVO.getName())
+                .eq(Bet::getCode, betSaveVO.getCode())
+                .eq(Bet::getMinBetMoney, betSaveVO.getMinBetMoney())
+                .eq(Bet::getMaxBetMoney, betSaveVO.getMaxBetMoney())
+                .eq(Bet::getOdds, betSaveVO.getOdds())
+                .eq(Bet::getDefaultMoney, betSaveVO.getDefaultMoney())
+                .eq(Bet::getType, betSaveVO.getType())
+                .eq(Bet::getPayBackPercent, betSaveVO.getPayBackPercent())
+                .eq(Bet::getStatus, betSaveVO.getStatus())
+                .eq(Bet::getSummary, betSaveVO.getSummary())
         );
         if (count > 0) {
             throw new BetException(BaseException.BaseExceptionEnum.Exists);
@@ -151,9 +133,7 @@ public class BetController {
         if (StringUtils.isNotBlank(betVO.getLotteryId())) {
             queryWrapper.lambda().eq(Bet::getLotteryId, betVO.getLotteryId());
         }
-        if (StringUtils.isNotBlank(betVO.getDefaultMoney())) {
-            queryWrapper.lambda().eq(Bet::getDefaultMoney, betVO.getDefaultMoney());
-        }
+
         if (StringUtils.isNotBlank(betVO.getType())) {
             queryWrapper.lambda().eq(Bet::getType, betVO.getType());
         }
@@ -164,7 +144,7 @@ public class BetController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(Bet::getId);
 
-            IPage<Bet> betPage = betService.page(page,queryWrapper);
+            IPage<Bet> betPage = betService.page(page, queryWrapper);
             List<BetPageVO> betPageVOList = JSON.parseArray(JSON.toJSONString(betPage.getRecords()), BetPageVO.class);
             IPage<BetPageVO> iPage = new Page<>();
             iPage.setPages(betPage.getPages());

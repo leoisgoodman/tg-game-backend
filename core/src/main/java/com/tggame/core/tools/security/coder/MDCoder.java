@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 
 /**
  * MD加密组件
- *
  */
 public abstract class MDCoder extends SecurityCoder {
 

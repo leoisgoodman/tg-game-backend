@@ -12,7 +12,6 @@ import java.util.Map;
 
 /**
  * RSA安全编码组件
- *
  */
 public abstract class RSACoder extends SecurityCoder {
 

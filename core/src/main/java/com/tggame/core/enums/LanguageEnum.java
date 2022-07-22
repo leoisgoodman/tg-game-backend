@@ -15,8 +15,7 @@ public enum LanguageEnum {
     ja_JP("日语"),
     th_TH("泰语"),
     es_ES("西班牙语"),
-    ru_RU("俄语"),*/
-    ;
+    ru_RU("俄语"),*/;
     public String val;
 
     LanguageEnum(String val) {

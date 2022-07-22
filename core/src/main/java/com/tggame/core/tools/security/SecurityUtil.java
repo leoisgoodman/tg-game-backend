@@ -11,15 +11,14 @@ import java.util.Map;
  * @since 2011-12-31
  */
 public final class SecurityUtil {
-    private SecurityUtil() {
-    }
-
+    public static final String CHARSET = "UTF-8";
     /**
      * 默认算法密钥
      */
     private static final byte[] ENCRYPT_KEY = {-81, 0, 105, 7, -32, 26, -49, 88};
 
-    public static final String CHARSET = "UTF-8";
+    private SecurityUtil() {
+    }
 
     /**
      * BASE64解码

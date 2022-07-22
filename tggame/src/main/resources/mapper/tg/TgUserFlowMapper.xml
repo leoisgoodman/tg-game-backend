@@ -17,7 +17,8 @@
 
 
     <sql id="columns">
-    id,user_id,tg_username,amount,type,status,from,to,create_time,update_time,summary
+        id
+        ,user_id,tg_username,amount,type,status,from,to,create_time,update_time,summary
     </sql>
 
     <sql id="where">

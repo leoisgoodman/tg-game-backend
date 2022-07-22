@@ -4,7 +4,6 @@
 package com.tggame.bet.service;
 
 import com.baidu.fsg.uid.UidGenerator;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tggame.bet.dao.BetOrderDAO;
 import com.tggame.bet.dao.mapper.BetOrderMapper;
@@ -13,10 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.List;
-import java.util.Date;
 
 
 /**

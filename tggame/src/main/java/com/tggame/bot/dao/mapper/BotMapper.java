@@ -1,7 +1,7 @@
 package com.tggame.bot.dao.mapper;
 
-import com.tggame.bot.entity.Bot;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.bot.entity.Bot;
 import org.springframework.stereotype.Repository;
 
 /**

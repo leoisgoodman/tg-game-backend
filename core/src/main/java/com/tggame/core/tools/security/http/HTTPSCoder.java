@@ -9,8 +9,6 @@ import java.security.SecureRandom;
  * HTTPS组件
  *
  * @author mm
- *
- *
  */
 public abstract class HTTPSCoder {
     /**

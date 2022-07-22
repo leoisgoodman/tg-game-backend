@@ -1,5 +1,5 @@
 /*
-* tg学习代码
+ * tg学习代码
  */
 package com.tggame.bot.entity;
 

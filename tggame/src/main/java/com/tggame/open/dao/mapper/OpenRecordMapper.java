@@ -1,7 +1,7 @@
 package com.tggame.open.dao.mapper;
 
-import com.tggame.open.entity.OpenRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.open.entity.OpenRecord;
 import org.springframework.stereotype.Repository;
 
 /**

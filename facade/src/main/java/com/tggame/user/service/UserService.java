@@ -3,11 +3,8 @@
  */
 package com.tggame.user.service;
 
-import com.tggame.user.entity.User;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.user.entity.User;
 
 /**
  * 群成员

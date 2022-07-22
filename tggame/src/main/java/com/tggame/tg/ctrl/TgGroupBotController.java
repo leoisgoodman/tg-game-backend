@@ -3,20 +3,19 @@
  */
 package com.tggame.tg.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.TgGroupBotException;
 import com.tggame.tg.entity.TgGroupBot;
 import com.tggame.tg.service.TgGroupBotService;
 import com.tggame.tg.vo.TgGroupBotPageVO;
 import com.tggame.tg.vo.TgGroupBotSaveVO;
 import com.tggame.tg.vo.TgGroupBotVO;
-import com.tggame.core.exceptions.TgGroupBotException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class TgGroupBotController {
     @ApiOperation(value = "创建TgGroupBot", notes = "创建TgGroupBot")
     @PostMapping("/build")
     public TgGroupBotSaveVO build(@ApiParam(name = "创建TgGroupBot", value = "传入json格式", required = true)
-                                   @RequestBody TgGroupBotSaveVO tgGroupBotSaveVO) {
+                                  @RequestBody TgGroupBotSaveVO tgGroupBotSaveVO) {
         if (StringUtils.isBlank(tgGroupBotSaveVO.getId())) {
             throw new TgGroupBotException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -62,8 +61,8 @@ public class TgGroupBotController {
 
         int count = tgGroupBotService.count(new LambdaQueryWrapper<TgGroupBot>()
                 .eq(TgGroupBot::getId, tgGroupBotSaveVO.getId())
-                        .eq(TgGroupBot::getGroupId, tgGroupBotSaveVO.getGroupId())
-                        .eq(TgGroupBot::getBotId, tgGroupBotSaveVO.getBotId())
+                .eq(TgGroupBot::getGroupId, tgGroupBotSaveVO.getGroupId())
+                .eq(TgGroupBot::getBotId, tgGroupBotSaveVO.getBotId())
         );
         if (count > 0) {
             throw new TgGroupBotException(BaseException.BaseExceptionEnum.Exists);
@@ -79,7 +78,6 @@ public class TgGroupBotController {
         log.debug(JSON.toJSONString(tgGroupBotSaveVO));
         return tgGroupBotSaveVO;
     }
-
 
 
     /**
@@ -106,7 +104,7 @@ public class TgGroupBotController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(TgGroupBot::getId);
 
-            IPage<TgGroupBot> tgGroupBotPage = tgGroupBotService.page(page,queryWrapper);
+            IPage<TgGroupBot> tgGroupBotPage = tgGroupBotService.page(page, queryWrapper);
             List<TgGroupBotPageVO> tgGroupBotPageVOList = JSON.parseArray(JSON.toJSONString(tgGroupBotPage.getRecords()), TgGroupBotPageVO.class);
             IPage<TgGroupBotPageVO> iPage = new Page<>();
             iPage.setPages(tgGroupBotPage.getPages());

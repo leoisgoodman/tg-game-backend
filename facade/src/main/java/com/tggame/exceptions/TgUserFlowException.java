@@ -1,7 +1,7 @@
 /*
-* tg学习代码
+ * tg学习代码
  */
-package com.tggame.core.exceptions;
+package com.tggame.exceptions;
 
 import java.io.Serializable;
 

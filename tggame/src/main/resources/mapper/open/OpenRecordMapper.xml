@@ -13,7 +13,8 @@
 
 
     <sql id="columns">
-    id,lottery_id,issue,num,status,create_time,update_time
+        id
+        ,lottery_id,issue,num,status,create_time,update_time
     </sql>
 
     <sql id="where">

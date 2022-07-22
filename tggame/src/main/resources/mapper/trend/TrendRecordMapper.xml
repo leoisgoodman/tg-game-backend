@@ -12,7 +12,8 @@
 
 
     <sql id="columns">
-    id,lottery_id,issue,data,open_time,create_time
+        id
+        ,lottery_id,issue,data,open_time,create_time
     </sql>
 
     <sql id="where">

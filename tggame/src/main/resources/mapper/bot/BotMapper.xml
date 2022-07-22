@@ -16,7 +16,8 @@
 
 
     <sql id="columns">
-    id,tg_bot_id,name,tg_token,bot_owner_username,tg_phone,share_link,status,create_time,update_time
+        id
+        ,tg_bot_id,name,tg_token,bot_owner_username,tg_phone,share_link,status,create_time,update_time
     </sql>
 
     <sql id="where">

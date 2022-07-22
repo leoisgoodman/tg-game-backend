@@ -3,20 +3,19 @@
  */
 package com.tggame.tg.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.TgUserFlowException;
 import com.tggame.tg.entity.TgUserFlow;
 import com.tggame.tg.service.TgUserFlowService;
 import com.tggame.tg.vo.TgUserFlowPageVO;
 import com.tggame.tg.vo.TgUserFlowSaveVO;
 import com.tggame.tg.vo.TgUserFlowVO;
-import com.tggame.core.exceptions.TgUserFlowException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class TgUserFlowController {
     @ApiOperation(value = "创建TgUserFlow", notes = "创建TgUserFlow")
     @PostMapping("/build")
     public TgUserFlowSaveVO build(@ApiParam(name = "创建TgUserFlow", value = "传入json格式", required = true)
-                                   @RequestBody TgUserFlowSaveVO tgUserFlowSaveVO) {
+                                  @RequestBody TgUserFlowSaveVO tgUserFlowSaveVO) {
         if (StringUtils.isBlank(tgUserFlowSaveVO.getId())) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -59,9 +58,7 @@ public class TgUserFlowController {
         if (StringUtils.isBlank(tgUserFlowSaveVO.getTgUsername())) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(tgUserFlowSaveVO.getAmount())) {
-            throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(tgUserFlowSaveVO.getType())) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -74,28 +71,23 @@ public class TgUserFlowController {
         if (StringUtils.isBlank(tgUserFlowSaveVO.getTo())) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(tgUserFlowSaveVO.getCreateTime())) {
-            throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(tgUserFlowSaveVO.getUpdateTime())) {
-            throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(tgUserFlowSaveVO.getSummary())) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Empty_Param);
         }
 
         int count = tgUserFlowService.count(new LambdaQueryWrapper<TgUserFlow>()
                 .eq(TgUserFlow::getId, tgUserFlowSaveVO.getId())
-                        .eq(TgUserFlow::getUserId, tgUserFlowSaveVO.getUserId())
-                        .eq(TgUserFlow::getTgUsername, tgUserFlowSaveVO.getTgUsername())
-                        .eq(TgUserFlow::getAmount, tgUserFlowSaveVO.getAmount())
-                        .eq(TgUserFlow::getType, tgUserFlowSaveVO.getType())
-                        .eq(TgUserFlow::getStatus, tgUserFlowSaveVO.getStatus())
-                        .eq(TgUserFlow::getFrom, tgUserFlowSaveVO.getFrom())
-                        .eq(TgUserFlow::getTo, tgUserFlowSaveVO.getTo())
-                        .eq(TgUserFlow::getCreateTime, tgUserFlowSaveVO.getCreateTime())
-                        .eq(TgUserFlow::getUpdateTime, tgUserFlowSaveVO.getUpdateTime())
-                        .eq(TgUserFlow::getSummary, tgUserFlowSaveVO.getSummary())
+                .eq(TgUserFlow::getUserId, tgUserFlowSaveVO.getUserId())
+                .eq(TgUserFlow::getTgUsername, tgUserFlowSaveVO.getTgUsername())
+                .eq(TgUserFlow::getAmount, tgUserFlowSaveVO.getAmount())
+                .eq(TgUserFlow::getType, tgUserFlowSaveVO.getType())
+                .eq(TgUserFlow::getStatus, tgUserFlowSaveVO.getStatus())
+                .eq(TgUserFlow::getFrom, tgUserFlowSaveVO.getFrom())
+                .eq(TgUserFlow::getTo, tgUserFlowSaveVO.getTo())
+                .eq(TgUserFlow::getCreateTime, tgUserFlowSaveVO.getCreateTime())
+                .eq(TgUserFlow::getUpdateTime, tgUserFlowSaveVO.getUpdateTime())
+                .eq(TgUserFlow::getSummary, tgUserFlowSaveVO.getSummary())
         );
         if (count > 0) {
             throw new TgUserFlowException(BaseException.BaseExceptionEnum.Exists);
@@ -111,7 +103,6 @@ public class TgUserFlowController {
         log.debug(JSON.toJSONString(tgUserFlowSaveVO));
         return tgUserFlowSaveVO;
     }
-
 
 
     /**
@@ -166,7 +157,7 @@ public class TgUserFlowController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(TgUserFlow::getId);
 
-            IPage<TgUserFlow> tgUserFlowPage = tgUserFlowService.page(page,queryWrapper);
+            IPage<TgUserFlow> tgUserFlowPage = tgUserFlowService.page(page, queryWrapper);
             List<TgUserFlowPageVO> tgUserFlowPageVOList = JSON.parseArray(JSON.toJSONString(tgUserFlowPage.getRecords()), TgUserFlowPageVO.class);
             IPage<TgUserFlowPageVO> iPage = new Page<>();
             iPage.setPages(tgUserFlowPage.getPages());

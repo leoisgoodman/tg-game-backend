@@ -1,6 +1,6 @@
 package com.tggame.core.entity;
 
-import com.tggame.core.exceptions.BaseException;
+import com.tggame.exceptions.BaseException;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,6 +14,15 @@ public final class R implements Serializable {
     private Object data = null;
     private String code = BaseException.BaseExceptionEnum.Server_Error.code;
 
+
+    private R() {
+    }
+
+    private R(String code, String info, Object data) {
+        this.info = info;
+        this.data = data;
+        this.code = code;
+    }
 
     /**
      * 失败 false  传递 异常枚举对象
@@ -50,15 +59,5 @@ public final class R implements Serializable {
 
     public static R success() {
         return new R(BaseException.BaseExceptionEnum.Success.code, BaseException.BaseExceptionEnum.Success.msg, null);
-    }
-
-
-    private R() {
-    }
-
-    private R(String code, String info, Object data) {
-        this.info = info;
-        this.data = data;
-        this.code = code;
     }
 }

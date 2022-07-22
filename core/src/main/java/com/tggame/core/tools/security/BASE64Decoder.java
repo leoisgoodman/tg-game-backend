@@ -17,7 +17,7 @@ import java.io.PushbackInputStream;
  * 44    *
  * 45    *      mydata = base64.decodeBuffer(bufferString);
  * 46    * </pre>
- *
+ * <p>
  * 47 * This will decode the String in <i>bufferString</i> and give you an array 48 * of bytes in
  * the array <i>myData</i>. 49 * 50 * On errors, this class throws a CEFormatException with the
  * following detail 51 * strings: 52 *
@@ -25,107 +25,114 @@ import java.io.PushbackInputStream;
  * <pre>
  * 53    *    "BASE64Decoder: Not enough bytes for an atom."
  * 54    * </pre>
- *
+ * <p>
  * 55 * 56 * @author Chuck McManis 57 * @see CharacterEncoder 58 * @see BASE64Decoder 59
  */
 public class BASE64Decoder extends CharacterDecoder {
 
-  /** This class has 4 bytes per atom */
-  @Override
-  protected int bytesPerAtom() {
-    return (4);
-  }
+    /**
+     * 74 * This character array provides the character to value map 75 * based on RFC1521. 76
+     */
+    private static final char pem_array[] = {
+            // 0 1 2 3 4 5 6 7
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', // 0
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 1
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 2
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', // 3
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 4
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 5
+            'w', 'x', 'y', 'z', '0', '1', '2', '3', // 6
+            '4', '5', '6', '7', '8', '9', '+', '/' // 7
+    };
+    private static final byte pem_convert_array[] = new byte[256];
 
-  /** Any multiple of 4 will do, 72 might be common */
-  @Override
-  protected int bytesPerLine() {
-    return (72);
-  }
-
-  /** 74 * This character array provides the character to value map 75 * based on RFC1521. 76 */
-  private static final char pem_array[] = {
-    // 0 1 2 3 4 5 6 7
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', // 0
-    'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 1
-    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 2
-    'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', // 3
-    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 4
-    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 5
-    'w', 'x', 'y', 'z', '0', '1', '2', '3', // 6
-    '4', '5', '6', '7', '8', '9', '+', '/' // 7
-  };
-
-  private static final byte pem_convert_array[] = new byte[256];
-
-  static {
-    for (int i = 0; i < 255; i++) {
-      pem_convert_array[i] = -1;
-    }
-    for (int i = 0; i < pem_array.length; i++) {
-      pem_convert_array[pem_array[i]] = (byte) i;
-    }
-  }
-
-  byte decode_buffer[] = new byte[4];
-
-  /** 103 * Decode one BASE64 atom into 1, 2, or 3 bytes of data. 104 */
-  @Override
-  protected void decodeAtom(PushbackInputStream inStream, OutputStream outStream, int rem)
-      throws java.io.IOException {
-    int i;
-    byte a = -1, b = -1, c = -1, d = -1;
-
-    if (rem < 2) {
-      throw new RuntimeException("BASE64Decoder: Not enough bytes for an atom.");
-    }
-    do {
-      i = inStream.read();
-      if (i == -1) {
-        throw new RuntimeException();
-      }
-    } while (i == '\n' || i == '\r');
-    decode_buffer[0] = (byte) i;
-
-    i = readFully(inStream, decode_buffer, 1, rem - 1);
-    if (i == -1) {
-      throw new RuntimeException();
+    static {
+        for (int i = 0; i < 255; i++) {
+            pem_convert_array[i] = -1;
+        }
+        for (int i = 0; i < pem_array.length; i++) {
+            pem_convert_array[pem_array[i]] = (byte) i;
+        }
     }
 
-    if (rem > 3 && decode_buffer[3] == '=') {
-      rem = 3;
-    }
-    if (rem > 2 && decode_buffer[2] == '=') {
-      rem = 2;
+    byte decode_buffer[] = new byte[4];
+
+    /**
+     * This class has 4 bytes per atom
+     */
+    @Override
+    protected int bytesPerAtom() {
+        return (4);
     }
 
-    if (rem == 4) {
-      d = pem_convert_array[decode_buffer[3] & 0xff];
-
-    } else if (rem == 3) {
-      c = pem_convert_array[decode_buffer[2] & 0xff];
+    /**
+     * Any multiple of 4 will do, 72 might be common
+     */
+    @Override
+    protected int bytesPerLine() {
+        return (72);
     }
 
-    if (rem == 2 || rem == 4 || rem == 3) {
-      b = pem_convert_array[decode_buffer[1] & 0xff];
-      a = pem_convert_array[decode_buffer[0] & 0xff];
-    }
+    /**
+     * 103 * Decode one BASE64 atom into 1, 2, or 3 bytes of data. 104
+     */
+    @Override
+    protected void decodeAtom(PushbackInputStream inStream, OutputStream outStream, int rem)
+            throws java.io.IOException {
+        int i;
+        byte a = -1, b = -1, c = -1, d = -1;
 
-    switch (rem) {
-      case 2:
-        outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
-        break;
-      case 3:
-        outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
-        outStream.write((byte) (((b << 4) & 0xf0) | ((c >>> 2) & 0xf)));
-        break;
-      case 4:
-        outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
-        outStream.write((byte) (((b << 4) & 0xf0) | ((c >>> 2) & 0xf)));
-        outStream.write((byte) (((c << 6) & 0xc0) | (d & 0x3f)));
-        break;
-      default:
-        break;
+        if (rem < 2) {
+            throw new RuntimeException("BASE64Decoder: Not enough bytes for an atom.");
+        }
+        do {
+            i = inStream.read();
+            if (i == -1) {
+                throw new RuntimeException();
+            }
+        } while (i == '\n' || i == '\r');
+        decode_buffer[0] = (byte) i;
+
+        i = readFully(inStream, decode_buffer, 1, rem - 1);
+        if (i == -1) {
+            throw new RuntimeException();
+        }
+
+        if (rem > 3 && decode_buffer[3] == '=') {
+            rem = 3;
+        }
+        if (rem > 2 && decode_buffer[2] == '=') {
+            rem = 2;
+        }
+
+        if (rem == 4) {
+            d = pem_convert_array[decode_buffer[3] & 0xff];
+
+        } else if (rem == 3) {
+            c = pem_convert_array[decode_buffer[2] & 0xff];
+        }
+
+        if (rem == 2 || rem == 4 || rem == 3) {
+            b = pem_convert_array[decode_buffer[1] & 0xff];
+            a = pem_convert_array[decode_buffer[0] & 0xff];
+        }
+
+        switch (rem) {
+            case 2:
+                outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
+                break;
+            case 3:
+                outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
+                outStream.write((byte) (((b << 4) & 0xf0) | ((c >>> 2) & 0xf)));
+                break;
+            case 4:
+                outStream.write((byte) (((a << 2) & 0xfc) | ((b >>> 4) & 3)));
+                outStream.write((byte) (((b << 4) & 0xf0) | ((c >>> 2) & 0xf)));
+                outStream.write((byte) (((c << 6) & 0xc0) | (d & 0x3f)));
+                break;
+            default:
+                break;
+        }
+        return;
     }
-    return;
-  }
 }

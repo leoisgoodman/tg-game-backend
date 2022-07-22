@@ -6,7 +6,7 @@ package com.tggame.core.enums;
  */
 public enum FileEnum {
     JPG("image/jpeg"), JPEG("image/jpeg"), PNG("image/png"), GIF("image/gif"), BMP("image/bmp"), RAR("application/octet-stream"), ZIP("application/zip"),
-    DOC("application/msword"), DOCX("application/msword"),JSON("application/json"), XLS("application/vnd.ms-excel"), XLSX("application/vnd.ms-excel"), PPT("application/vnd.ms-powerpoint"), PPTX("application/vnd.ms-powerpoint"), FLV("application/octet-stream"), TXT("text/plain");
+    DOC("application/msword"), DOCX("application/msword"), JSON("application/json"), XLS("application/vnd.ms-excel"), XLSX("application/vnd.ms-excel"), PPT("application/vnd.ms-powerpoint"), PPTX("application/vnd.ms-powerpoint"), FLV("application/octet-stream"), TXT("text/plain");
     public String value;
 
     FileEnum(String value) {

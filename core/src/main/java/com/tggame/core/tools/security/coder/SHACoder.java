@@ -7,8 +7,6 @@ import java.security.MessageDigest;
  * SHA加密组件
  *
  * @author mm
- *
- *
  */
 public abstract class SHACoder extends SecurityCoder {
 

@@ -1,8 +1,8 @@
 package com.tggame.group.dao;
 
+import com.tggame.core.base.BaseDAO;
 import com.tggame.group.dao.mapper.GroupBetMapper;
 import com.tggame.group.entity.GroupBet;
-import com.tggame.core.base.BaseDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

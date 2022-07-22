@@ -26,7 +26,8 @@
 
 
     <sql id="columns">
-    id,group_id,tg_user_id,tg_username,username,password,google_code,percent,status,type,is_owner,is_admin,usdt_balance,usdt_address,bet_total_money,bet_win_money,bet_lost_money,summary,create_time,update_time
+        id
+        ,group_id,tg_user_id,tg_username,username,password,google_code,percent,status,type,is_owner,is_admin,usdt_balance,usdt_address,bet_total_money,bet_win_money,bet_lost_money,summary,create_time,update_time
     </sql>
 
     <sql id="where">

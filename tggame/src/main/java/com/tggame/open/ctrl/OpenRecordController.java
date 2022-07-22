@@ -3,20 +3,19 @@
  */
 package com.tggame.open.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.OpenRecordException;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.service.OpenRecordService;
 import com.tggame.open.vo.OpenRecordPageVO;
 import com.tggame.open.vo.OpenRecordSaveVO;
 import com.tggame.open.vo.OpenRecordVO;
-import com.tggame.core.exceptions.OpenRecordException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,37 +48,30 @@ public class OpenRecordController {
     @ApiOperation(value = "创建OpenRecord", notes = "创建OpenRecord")
     @PostMapping("/build")
     public OpenRecordSaveVO build(@ApiParam(name = "创建OpenRecord", value = "传入json格式", required = true)
-                                   @RequestBody OpenRecordSaveVO openRecordSaveVO) {
+                                  @RequestBody OpenRecordSaveVO openRecordSaveVO) {
         if (StringUtils.isBlank(openRecordSaveVO.getId())) {
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
         if (StringUtils.isBlank(openRecordSaveVO.getLotteryId())) {
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(openRecordSaveVO.getIssue())) {
-            throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(openRecordSaveVO.getNum())) {
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
         if (StringUtils.isBlank(openRecordSaveVO.getStatus())) {
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(openRecordSaveVO.getCreateTime())) {
-            throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(openRecordSaveVO.getUpdateTime())) {
-            throw new OpenRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
 
         int count = openRecordService.count(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getId, openRecordSaveVO.getId())
-                        .eq(OpenRecord::getLotteryId, openRecordSaveVO.getLotteryId())
-                        .eq(OpenRecord::getIssue, openRecordSaveVO.getIssue())
-                        .eq(OpenRecord::getNum, openRecordSaveVO.getNum())
-                        .eq(OpenRecord::getStatus, openRecordSaveVO.getStatus())
-                        .eq(OpenRecord::getCreateTime, openRecordSaveVO.getCreateTime())
-                        .eq(OpenRecord::getUpdateTime, openRecordSaveVO.getUpdateTime())
+                .eq(OpenRecord::getLotteryId, openRecordSaveVO.getLotteryId())
+                .eq(OpenRecord::getIssue, openRecordSaveVO.getIssue())
+                .eq(OpenRecord::getNum, openRecordSaveVO.getNum())
+                .eq(OpenRecord::getStatus, openRecordSaveVO.getStatus())
+                .eq(OpenRecord::getCreateTime, openRecordSaveVO.getCreateTime())
+                .eq(OpenRecord::getUpdateTime, openRecordSaveVO.getUpdateTime())
         );
         if (count > 0) {
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Exists);
@@ -95,7 +87,6 @@ public class OpenRecordController {
         log.debug(JSON.toJSONString(openRecordSaveVO));
         return openRecordSaveVO;
     }
-
 
 
     /**
@@ -138,7 +129,7 @@ public class OpenRecordController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(OpenRecord::getId);
 
-            IPage<OpenRecord> openRecordPage = openRecordService.page(page,queryWrapper);
+            IPage<OpenRecord> openRecordPage = openRecordService.page(page, queryWrapper);
             List<OpenRecordPageVO> openRecordPageVOList = JSON.parseArray(JSON.toJSONString(openRecordPage.getRecords()), OpenRecordPageVO.class);
             IPage<OpenRecordPageVO> iPage = new Page<>();
             iPage.setPages(openRecordPage.getPages());

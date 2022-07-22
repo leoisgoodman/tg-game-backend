@@ -3,20 +3,19 @@
  */
 package com.tggame.user.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.UserException;
 import com.tggame.user.entity.User;
 import com.tggame.user.service.UserService;
 import com.tggame.user.vo.UserPageVO;
 import com.tggame.user.vo.UserSaveVO;
 import com.tggame.user.vo.UserVO;
-import com.tggame.core.exceptions.UserException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class UserController {
     @ApiOperation(value = "创建User", notes = "创建User")
     @PostMapping("/build")
     public UserSaveVO build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
-                                   @RequestBody UserSaveVO userSaveVO) {
+                            @RequestBody UserSaveVO userSaveVO) {
         if (StringUtils.isBlank(userSaveVO.getId())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -71,9 +70,7 @@ public class UserController {
         if (StringUtils.isBlank(userSaveVO.getGoogleCode())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(userSaveVO.getPercent())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(userSaveVO.getStatus())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -86,52 +83,37 @@ public class UserController {
         if (StringUtils.isBlank(userSaveVO.getIsAdmin())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(userSaveVO.getUsdtBalance())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(userSaveVO.getUsdtAddress())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(userSaveVO.getBetTotalMoney())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getBetWinMoney())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getBetLostMoney())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(userSaveVO.getSummary())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(userSaveVO.getCreateTime())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getUpdateTime())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
 
         int count = userService.count(new LambdaQueryWrapper<User>()
                 .eq(User::getId, userSaveVO.getId())
-                        .eq(User::getGroupId, userSaveVO.getGroupId())
-                        .eq(User::getTgUserId, userSaveVO.getTgUserId())
-                        .eq(User::getTgUsername, userSaveVO.getTgUsername())
-                        .eq(User::getUsername, userSaveVO.getUsername())
-                        .eq(User::getPassword, userSaveVO.getPassword())
-                        .eq(User::getGoogleCode, userSaveVO.getGoogleCode())
-                        .eq(User::getPercent, userSaveVO.getPercent())
-                        .eq(User::getStatus, userSaveVO.getStatus())
-                        .eq(User::getType, userSaveVO.getType())
-                        .eq(User::getIsOwner, userSaveVO.getIsOwner())
-                        .eq(User::getIsAdmin, userSaveVO.getIsAdmin())
-                        .eq(User::getUsdtBalance, userSaveVO.getUsdtBalance())
-                        .eq(User::getUsdtAddress, userSaveVO.getUsdtAddress())
-                        .eq(User::getBetTotalMoney, userSaveVO.getBetTotalMoney())
-                        .eq(User::getBetWinMoney, userSaveVO.getBetWinMoney())
-                        .eq(User::getBetLostMoney, userSaveVO.getBetLostMoney())
-                        .eq(User::getSummary, userSaveVO.getSummary())
-                        .eq(User::getCreateTime, userSaveVO.getCreateTime())
-                        .eq(User::getUpdateTime, userSaveVO.getUpdateTime())
+                .eq(User::getGroupId, userSaveVO.getGroupId())
+                .eq(User::getTgUserId, userSaveVO.getTgUserId())
+                .eq(User::getTgUsername, userSaveVO.getTgUsername())
+                .eq(User::getUsername, userSaveVO.getUsername())
+                .eq(User::getPassword, userSaveVO.getPassword())
+                .eq(User::getGoogleCode, userSaveVO.getGoogleCode())
+                .eq(User::getPercent, userSaveVO.getPercent())
+                .eq(User::getStatus, userSaveVO.getStatus())
+                .eq(User::getType, userSaveVO.getType())
+                .eq(User::getIsOwner, userSaveVO.getIsOwner())
+                .eq(User::getIsAdmin, userSaveVO.getIsAdmin())
+                .eq(User::getUsdtBalance, userSaveVO.getUsdtBalance())
+                .eq(User::getUsdtAddress, userSaveVO.getUsdtAddress())
+                .eq(User::getBetTotalMoney, userSaveVO.getBetTotalMoney())
+                .eq(User::getBetWinMoney, userSaveVO.getBetWinMoney())
+                .eq(User::getBetLostMoney, userSaveVO.getBetLostMoney())
+                .eq(User::getSummary, userSaveVO.getSummary())
+                .eq(User::getCreateTime, userSaveVO.getCreateTime())
+                .eq(User::getUpdateTime, userSaveVO.getUpdateTime())
         );
         if (count > 0) {
             throw new UserException(BaseException.BaseExceptionEnum.Exists);
@@ -165,6 +147,7 @@ public class UserController {
         log.debug(JSON.toJSONString(userVO));
         return userVO;
     }
+
     /**
      * 根据条件tgUsername查询群成员一个详情信息
      *
@@ -181,6 +164,7 @@ public class UserController {
         log.debug(JSON.toJSONString(userVO));
         return userVO;
     }
+
     /**
      * 根据条件username查询群成员一个详情信息
      *
@@ -240,9 +224,7 @@ public class UserController {
         if (StringUtils.isNotBlank(userVO.getIsAdmin())) {
             queryWrapper.lambda().eq(User::getIsAdmin, userVO.getIsAdmin());
         }
-        if (StringUtils.isNotBlank(userVO.getUsdtBalance())) {
-            queryWrapper.lambda().eq(User::getUsdtBalance, userVO.getUsdtBalance());
-        }
+
         if (StringUtils.isNotBlank(userVO.getUsdtAddress())) {
             queryWrapper.lambda().eq(User::getUsdtAddress, userVO.getUsdtAddress());
         }
@@ -262,7 +244,7 @@ public class UserController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(User::getId);
 
-            IPage<User> userPage = userService.page(page,queryWrapper);
+            IPage<User> userPage = userService.page(page, queryWrapper);
             List<UserPageVO> userPageVOList = JSON.parseArray(JSON.toJSONString(userPage.getRecords()), UserPageVO.class);
             IPage<UserPageVO> iPage = new Page<>();
             iPage.setPages(userPage.getPages());

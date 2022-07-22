@@ -3,11 +3,8 @@
  */
 package com.tggame.lottery.service;
 
-import com.tggame.lottery.entity.Lottery;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.lottery.entity.Lottery;
 
 /**
  * 彩种

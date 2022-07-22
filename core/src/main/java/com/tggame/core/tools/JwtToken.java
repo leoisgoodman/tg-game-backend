@@ -1,4 +1,3 @@
-
 package com.tggame.core.tools;
 
 import com.auth0.jwt.JWT;

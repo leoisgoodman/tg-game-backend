@@ -1,7 +1,7 @@
 package com.tggame.group.dao.mapper;
 
-import com.tggame.group.entity.GroupBet;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.group.entity.GroupBet;
 import org.springframework.stereotype.Repository;
 
 /**

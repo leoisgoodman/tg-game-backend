@@ -11,7 +11,6 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * DES安全编码组件
- *
  */
 public abstract class DESCoder extends SecurityCoder {
 

@@ -1,8 +1,8 @@
 package com.tggame.core.base;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @author tg 11-12-12 下午10:37
  */
 @Slf4j
-public abstract class BaseDAO<M extends BaseMapper<E>, E> implements BaseMapper<E>  {
+public abstract class BaseDAO<M extends BaseMapper<E>, E> implements BaseMapper<E> {
 
     @Autowired
     protected M mapper;

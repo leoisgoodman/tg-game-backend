@@ -3,20 +3,19 @@
  */
 package com.tggame.group.ctrl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.core.entity.R;
+import com.tggame.exceptions.BaseException;
+import com.tggame.exceptions.GroupLotteryException;
 import com.tggame.group.entity.GroupLottery;
 import com.tggame.group.service.GroupLotteryService;
 import com.tggame.group.vo.GroupLotteryPageVO;
 import com.tggame.group.vo.GroupLotterySaveVO;
 import com.tggame.group.vo.GroupLotteryVO;
-import com.tggame.core.exceptions.GroupLotteryException;
-import com.tggame.core.exceptions.BaseException;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.tggame.core.entity.PageVO;
-import com.tggame.core.entity.R;
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +48,7 @@ public class GroupLotteryController {
     @ApiOperation(value = "创建GroupLottery", notes = "创建GroupLottery")
     @PostMapping("/build")
     public GroupLotterySaveVO build(@ApiParam(name = "创建GroupLottery", value = "传入json格式", required = true)
-                                   @RequestBody GroupLotterySaveVO groupLotterySaveVO) {
+                                    @RequestBody GroupLotterySaveVO groupLotterySaveVO) {
         if (StringUtils.isBlank(groupLotterySaveVO.getId())) {
             throw new GroupLotteryException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -62,8 +61,8 @@ public class GroupLotteryController {
 
         int count = groupLotteryService.count(new LambdaQueryWrapper<GroupLottery>()
                 .eq(GroupLottery::getId, groupLotterySaveVO.getId())
-                        .eq(GroupLottery::getGroupId, groupLotterySaveVO.getGroupId())
-                        .eq(GroupLottery::getLotteryId, groupLotterySaveVO.getLotteryId())
+                .eq(GroupLottery::getGroupId, groupLotterySaveVO.getGroupId())
+                .eq(GroupLottery::getLotteryId, groupLotterySaveVO.getLotteryId())
         );
         if (count > 0) {
             throw new GroupLotteryException(BaseException.BaseExceptionEnum.Exists);
@@ -79,7 +78,6 @@ public class GroupLotteryController {
         log.debug(JSON.toJSONString(groupLotterySaveVO));
         return groupLotterySaveVO;
     }
-
 
 
     /**
@@ -106,7 +104,7 @@ public class GroupLotteryController {
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(GroupLottery::getId);
 
-            IPage<GroupLottery> groupLotteryPage = groupLotteryService.page(page,queryWrapper);
+            IPage<GroupLottery> groupLotteryPage = groupLotteryService.page(page, queryWrapper);
             List<GroupLotteryPageVO> groupLotteryPageVOList = JSON.parseArray(JSON.toJSONString(groupLotteryPage.getRecords()), GroupLotteryPageVO.class);
             IPage<GroupLotteryPageVO> iPage = new Page<>();
             iPage.setPages(groupLotteryPage.getPages());

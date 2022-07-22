@@ -1,7 +1,7 @@
 package com.tggame.bet.dao.mapper;
 
-import com.tggame.bet.entity.BetOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tggame.bet.entity.BetOrder;
 import org.springframework.stereotype.Repository;
 
 /**

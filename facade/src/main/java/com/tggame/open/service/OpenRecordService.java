@@ -3,11 +3,8 @@
  */
 package com.tggame.open.service;
 
-import com.tggame.open.entity.OpenRecord;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
+import com.tggame.open.entity.OpenRecord;
 
 /**
  * 开奖记录
