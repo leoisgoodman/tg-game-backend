@@ -6,4 +6,5 @@ include 'service'
 include 'task'
 include 'mgt'
 include 'client'
+include 'open-api'
 
