@@ -43,7 +43,7 @@ public class TrendRecord implements java.io.Serializable {
      * 数据库字段:open_time  属性显示:开奖时间
      */
     @ApiModelProperty(value = "开奖时间")
-    private java.util.Date openTime;
+    private String openTime;
     /**
      * 数据库字段:create_time  属性显示:创建时间
      */

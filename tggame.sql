@@ -195,7 +195,7 @@ CREATE TABLE trend_record
     lottery_id  varchar(64) comment '彩种id',
     issue       int(10) comment '期号',
     data        varchar(64) comment '走势数据',
-    open_time   time(7) comment '开奖时间',
+    open_time   varchar(16) comment '开奖时间',
     create_time datetime    NULL comment '创建时间',
     PRIMARY KEY (id)
 ) comment ='走势记录';

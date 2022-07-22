@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 
 /**
  * 走势记录
@@ -32,7 +34,8 @@ public class TrendRecordServiceImpl extends ServiceImpl<TrendRecordMapper, Trend
     @Transactional
     @Override
     public boolean save(TrendRecord entity) {
-//        entity.setId(String.valueOf(uidGenerator.getUID()));
+        entity.setId(String.valueOf(uidGenerator.getUID()));
+        entity.setCreateTime(new Date());
         return super.save(entity);
     }
 
