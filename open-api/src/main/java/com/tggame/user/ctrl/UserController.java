@@ -42,16 +42,15 @@ public class UserController {
 
     /**
      * 创建 群成员
+     * 加群时自动处理
      *
      * @return R
      */
     @ApiOperation(value = "创建User", notes = "创建User")
     @PostMapping("/build")
-    public UserSaveVO build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
-                            @RequestBody UserSaveVO userSaveVO) {
-        if (StringUtils.isBlank(userSaveVO.getId())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+    public String build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
+                        @RequestBody UserSaveVO userSaveVO) {
+
         if (StringUtils.isBlank(userSaveVO.getGroupId())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -61,73 +60,33 @@ public class UserController {
         if (StringUtils.isBlank(userSaveVO.getTgUsername())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(userSaveVO.getUsername())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getPassword())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getGoogleCode())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(userSaveVO.getStatus())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getType())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getIsOwner())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(userSaveVO.getIsAdmin())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(userSaveVO.getUsdtAddress())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(userSaveVO.getSummary())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
 
 
         int count = userService.count(new LambdaQueryWrapper<User>()
-                .eq(User::getId, userSaveVO.getId())
                 .eq(User::getGroupId, userSaveVO.getGroupId())
-                .eq(User::getTgUserId, userSaveVO.getTgUserId())
-                .eq(User::getTgUsername, userSaveVO.getTgUsername())
-                .eq(User::getUsername, userSaveVO.getUsername())
-                .eq(User::getPassword, userSaveVO.getPassword())
-                .eq(User::getGoogleCode, userSaveVO.getGoogleCode())
-                .eq(User::getPercent, userSaveVO.getPercent())
-                .eq(User::getStatus, userSaveVO.getStatus())
-                .eq(User::getType, userSaveVO.getType())
-                .eq(User::getIsOwner, userSaveVO.getIsOwner())
-                .eq(User::getIsAdmin, userSaveVO.getIsAdmin())
-                .eq(User::getUsdtBalance, userSaveVO.getUsdtBalance())
-                .eq(User::getUsdtAddress, userSaveVO.getUsdtAddress())
-                .eq(User::getBetTotalMoney, userSaveVO.getBetTotalMoney())
-                .eq(User::getBetWinMoney, userSaveVO.getBetWinMoney())
-                .eq(User::getBetLostMoney, userSaveVO.getBetLostMoney())
-                .eq(User::getSummary, userSaveVO.getSummary())
-                .eq(User::getCreateTime, userSaveVO.getCreateTime())
-                .eq(User::getUpdateTime, userSaveVO.getUpdateTime())
-        );
+                .eq(User::getTgUserId, userSaveVO.getTgUserId()));
         if (count > 0) {
             throw new UserException(BaseException.BaseExceptionEnum.Exists);
         }
 
         User newUser = new User();
         BeanUtils.copyProperties(userSaveVO, newUser);
-
+        //todo 需要处理创建用户以及加群操作
         userService.save(newUser);
 
-        userSaveVO = new UserSaveVO();
-        BeanUtils.copyProperties(newUser, userSaveVO);
-        log.debug(JSON.toJSONString(userSaveVO));
-        return userSaveVO;
+        String toNewUser = "欢迎 @{at} 加入\n" +
+                "快速开始教程\n" +
+                "1. 每2分钟开奖一次, 开奖前20秒封盘，停止投注\n" +
+                "2. 开奖号取币安的BTC/USDT价格双数分钟的开盘价，取值到小数点后一位，例如币安BTC/USDT的价格是49617.8，则开奖号码的算法：4+9+6+1+7+8=35，取个位数5为开奖号码\n" +
+                "3. 本系统专业为博彩双方服务，不参与任何形式博彩，无需担心庄家输了赖帐，请放心存款\n" +
+                "4. 操作命令：\n" +
+                "/start 开启彩票\n" +
+                "/stop 关闭彩票\n" +
+                "/mini H5小程序 \n" +
+                "/help 查看帮助\n" +
+                "/doc 操作指南";
+
+        return toNewUser;
     }
 
 
