@@ -45,10 +45,20 @@ public class BetOrderPageVO extends BaseVO implements java.io.Serializable {
     @ApiModelProperty(value = "机器人id")
     private java.lang.String botId;
     /**
+     * 数据库字段:tg_bot_id  属性显示:机器人id
+     */
+    @ApiModelProperty(value = "tg下机器人id")
+    private java.lang.String tgBotId;
+    /**
      * 数据库字段:lottery_id  属性显示:彩种id
      */
     @ApiModelProperty(value = "彩种id")
     private java.lang.String lotteryId;
+    /**
+     * 数据库字段:issue  属性显示:期号
+     */
+    @ApiModelProperty(value = "期号")
+    private java.lang.Integer issue;
     /**
      * 数据库字段:lottery_name  属性显示:彩种
      */

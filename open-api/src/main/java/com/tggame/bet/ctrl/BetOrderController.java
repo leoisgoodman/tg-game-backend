@@ -16,6 +16,10 @@ import com.tggame.bet.vo.BetOrderVO;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.BetOrderException;
+import com.tggame.exceptions.OpenRecordException;
+import com.tggame.open.entity.OpenRecord;
+import com.tggame.open.entity.OpenRecordStatus;
+import com.tggame.open.service.OpenRecordService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +42,9 @@ import java.util.List;
 public class BetOrderController {
     @Autowired
     private BetOrderService betOrderService;
+
+    @Autowired
+    private OpenRecordService openRecordService;
 
 
     /**
@@ -137,19 +144,32 @@ public class BetOrderController {
     /**
      * 根据条件tgUserId查询投注一个详情信息
      *
-     * @param tgUserId tg下用户id
      * @return BetOrderVO
      */
     @ApiOperation(value = "创建BetOrder", notes = "创建BetOrder")
-    @GetMapping("/load/tgUserId/{tgUserId}")
-    public BetOrderVO loadByTgUserId(@PathVariable java.lang.String tgUserId) {
-        BetOrder betOrder = betOrderService.getOne(new LambdaQueryWrapper<BetOrder>()
-                .eq(BetOrder::getTgUserId, tgUserId));
-        BetOrderVO betOrderVO = new BetOrderVO();
-        BeanUtils.copyProperties(betOrder, betOrderVO);
-        log.debug(JSON.toJSONString(betOrderVO));
-        return betOrderVO;
+    @GetMapping("/load/{tgGroupId}/{tgUserId}/{tgBotId}")
+    public String loadDetail(@PathVariable String tgGroupId, @PathVariable String tgUserId, @PathVariable String tgBotId) {
+        OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Enable));
+        if (null == openRecord) {
+            log.error("查询期号不存在");
+            throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+        List<BetOrder> betOrderList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
+                .eq(BetOrder::getTgGroupId, tgGroupId)
+                .eq(BetOrder::getTgUserId, tgUserId)
+                .eq(BetOrder::getTgBotId, tgBotId)
+                .eq(BetOrder::getIssue, openRecord.getIssue()));
+
+        //todo 实现投注详情
+        String detail = "第20220720888期合计投注:大:{big}|小:{small}|单:{even}|双:{odd}\n" +
+                "号码:{num}\n" +
+                "{at}\n";
+
+        return detail;
     }
+
 
     /**
      * 查询投注信息集合

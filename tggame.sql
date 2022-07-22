@@ -40,10 +40,12 @@ CREATE TABLE bet_order
     id                varchar(64) NOT NULL comment 'id',
     group_id          varchar(64) comment '群id',
     tg_group_id       varchar(64) comment 'tg群id',
+    tg_bot_id         varchar(64) comment 'tg下机器人id',
     user_id           varchar(64) comment '用户id',
     tg_user_id        varchar(64) NOT NULL comment 'tg下用户id',
     bot_id            varchar(64) comment '机器人id',
     lottery_id        varchar(64) comment '彩种id',
+    issue             int(10) comment '期号',
     lottery_name      varchar(64) comment '彩种',
     bet_id            varchar(64) comment '玩法id',
     bet_name          varchar(32) comment '玩法名',
@@ -61,13 +63,16 @@ CREATE TABLE bet_order
     PRIMARY KEY (id),
     INDEX (group_id),
     INDEX (tg_group_id),
+    INDEX (tg_bot_id),
     INDEX (tg_user_id),
     INDEX (bot_id),
     INDEX (lottery_id),
+    INDEX (issue),
     INDEX (bet_id),
     INDEX (bet_type),
     INDEX (open_id)
 ) comment ='投注';
+
 CREATE TABLE bot
 (
     id                 varchar(64) NOT NULL comment 'id',

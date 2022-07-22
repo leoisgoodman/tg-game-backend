@@ -8,7 +8,9 @@
         <result property="userId" column="user_id"/>
         <result property="tgUserId" column="tg_user_id"/>
         <result property="botId" column="bot_id"/>
+        <result property="tgBotId" column="tg_bot_id"/>
         <result property="lotteryId" column="lottery_id"/>
+        <result property="issue" column="issue"/>
         <result property="lotteryName" column="lottery_name"/>
         <result property="betId" column="bet_id"/>
         <result property="betName" column="bet_name"/>
@@ -28,7 +30,7 @@
 
     <sql id="columns">
         id
-        ,group_id,tg_group_id,user_id,tg_user_id,bot_id,lottery_id,lottery_name,bet_id,bet_name,bet_num,odds,bet_type,pay_back_percent,amount,win_amount,should_pay_amount,status,open_id,create_time,update_time
+        ,group_id,tg_group_id,user_id,tg_user_id,bot_id,tg_bot_id,lottery_id,issue,lottery_name,bet_id,bet_name,bet_num,odds,bet_type,pay_back_percent,amount,win_amount,should_pay_amount,status,open_id,create_time,update_time
     </sql>
 
     <sql id="where">
