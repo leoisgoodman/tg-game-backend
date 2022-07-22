@@ -3,5 +3,6 @@ include 'common'
 include 'facade'
 
 include 'service'
+include 'task'
 include 'tggame'
 

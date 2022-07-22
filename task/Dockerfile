@@ -1,6 +1,6 @@
 FROM openjdk:11-jdk
 VOLUME /tmp
-ADD task/build/libs/*.jar app.jar
+ADD tggame/build/libs/*.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENV JAVA_OPTS="-Xms128m -Xmx512m"
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
