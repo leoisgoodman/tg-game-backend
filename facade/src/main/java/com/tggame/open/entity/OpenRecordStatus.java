@@ -11,7 +11,9 @@ package com.tggame.open.entity;
 public enum OpenRecordStatus implements java.io.Serializable {
     Ready("就绪"),
     Enable("可投注"),
+    Lock("封盘"),
     Drawn("已开奖"),
+    Invalid("作废"),
     ;
 
     public String val;

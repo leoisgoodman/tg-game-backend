@@ -173,6 +173,53 @@ public class BetOrderController {
 
 
     /**
+     * 根据群id，统计当期投注情况
+     *
+     * @return BetOrderVO
+     */
+    @ApiOperation(value = "根据群id，统计当期投注情况", notes = "根据群id，统计当期投注情况")
+    @GetMapping("/count/{tgGroupId}")
+    public String countDetail(@PathVariable String tgGroupId) {
+        OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Lock));
+        if (null == openRecord) {
+            log.error("查询期号不存在");
+            throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+
+        List<BetOrder> betOrderList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
+                .eq(BetOrder::getTgGroupId, tgGroupId)
+                .eq(BetOrder::getIssue, openRecord.getIssue()));
+
+        String price = openRecord.getNum();
+        int num = Integer.parseInt(price.split(".")[1]);
+        String bigSmall = num >= 5 ? "大" : "小";
+        String oddEven = num % 2 == 0 ? "双" : "单";
+        String result = num + "," + bigSmall + "," + oddEven;
+
+        //todo 投注统计以上数据进行替换，下方提炼成模板模式
+        String detail = "第202207201918期\n" +
+                "BTC/USDT: {price}\n" +
+                "7 , 大 , 单\n" +
+                "盈亏统计：\n" +
+                "无人投注\n" +
+                "\n" +
+                "第202207201920期\n" +
+                "开奖时间：{open_time}\n" +
+                "投注中...\n" +
+                "本期枱红 10000 试玩\n" +
+                "两面赔率 1.96\n" +
+                "大小限红 10 ~ 1000\n" +
+                "单双限红 10 ~ 1000\n" +
+                "号码赔率 9.8\n" +
+                "号码限红 10 ~ 500";
+
+        return detail;
+    }
+
+
+    /**
      * 查询投注信息集合
      *
      * @return 分页对象
