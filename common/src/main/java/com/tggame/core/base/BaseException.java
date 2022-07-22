@@ -1,7 +1,7 @@
 /*
  * tg学习代码
  */
-package com.tggame.exceptions;
+package com.tggame.core.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

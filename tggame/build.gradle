@@ -50,8 +50,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE'
-    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2.2.3.RELEASE'
+//    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE'
+//    implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2.2.3.RELEASE'
     implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel'
     implementation 'com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7'
 

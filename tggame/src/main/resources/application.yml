@@ -10,9 +10,9 @@ spring:
   datasource:
     tidb:
       name: mysql-data
-      url: jdbc:mysql://{host}/{database}?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=round&allowMultiQueries=true
-      username: { username }
-      password: { password }
+      url: jdbc:mysql://test.cg45.xyz:31008/demo?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=round&allowMultiQueries=true
+      username: root
+      password: c60AWBnmitRY0Gst
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
       initialSize: 10 #初始化连接数量，最大最小连接数
@@ -33,9 +33,9 @@ spring:
       filters: stat #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：监控统计用的filter:stat 日志用的filter:log4j 防御SQL注入的filter:wall
     uid:
       name: uid-data
-      url: jdbc:mysql://192.168.0.250:4000/sso?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=round&allowMultiQueries=true
-      username: { username }
-      password: { password }
+      url: jdbc:mysql://test.cg45.xyz:31008/demo?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=round&allowMultiQueries=true
+      username: root
+      password: c60AWBnmitRY0Gst
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource # 使用druid数据源
       initialSize: 10 #初始化连接数量，最大最小连接数
@@ -56,21 +56,16 @@ spring:
       filters: stat #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：监控统计用的filter:stat 日志用的filter:log4j 防御SQL注入的filter:wall
 
   redis:
-    host: 192.168.0.250
-    port: 6379
-    password:
+    host: test.cg45.xyz
+    port: 31081
+    password: ZG0IdA5TcXUw0tKiNQLIIxK5US
     timeout: 5000 #连接超时时间
-      lettuce:
-        pool:
-          max-active: 30 #连接池最大连接数
-          max-wait: -1 #连接池最大阻塞时间
-          max-idle: 10 #连接池中最大空闲连接
-          min-idle: 5 #连接池中最小空闲连接
-  cloud:
-    stream:
-      rocketmq:
-        binder:
-          name-server: 192.168.0.250:9876
+    lettuce:
+      pool:
+        max-active: 30 #连接池最大连接数
+        max-wait: -1 #连接池最大阻塞时间
+        max-idle: 10 #连接池中最大空闲连接
+        min-idle: 5 #连接池中最小空闲连接
 
 
 #feign:
@@ -102,7 +97,7 @@ ribbon:
 logging:
   level:
     com:
-      ds: debug
+      tggame: debug
 
   path: /var/log/tomcat/
   config: classpath:logback.xml

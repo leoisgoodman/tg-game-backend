@@ -3,6 +3,8 @@
  */
 package com.tggame.exceptions;
 
+import com.tggame.core.base.BaseException;
+
 import java.io.Serializable;
 
 public class TrendRecordException extends BaseException implements Serializable {

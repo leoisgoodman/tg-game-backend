@@ -1,6 +1,6 @@
 package com.tggame.config;
 
-import com.tggame.exceptions.BaseException;
+import com.tggame.core.base.BaseException;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;

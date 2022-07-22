@@ -1,6 +1,6 @@
 package com.tggame.core.entity;
 
-import com.tggame.exceptions.BaseException;
+import com.tggame.core.base.BaseException;
 import lombok.Data;
 
 import java.io.Serializable;
