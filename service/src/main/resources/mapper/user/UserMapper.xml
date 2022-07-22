@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tggame.user.dao.mapper.UserMapper">
+    <resultMap id="rs_base" type="com.tggame.user.entity.User">
+        <result property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="tgUserId" column="tg_user_id"/>
+        <result property="tgUsername" column="tg_username"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="googleCode" column="google_code"/>
+        <result property="percent" column="percent"/>
+        <result property="status" column="status"/>
+        <result property="type" column="type"/>
+        <result property="isOwner" column="is_owner"/>
+        <result property="isAdmin" column="is_admin"/>
+        <result property="usdtBalance" column="usdt_balance"/>
+        <result property="usdtAddress" column="usdt_address"/>
+        <result property="betTotalMoney" column="bet_total_money"/>
+        <result property="betWinMoney" column="bet_win_money"/>
+        <result property="betLostMoney" column="bet_lost_money"/>
+        <result property="summary" column="summary"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        id
+        ,group_id,tg_user_id,tg_username,username,password,google_code,percent,status,type,is_owner,is_admin,usdt_balance,usdt_address,bet_total_money,bet_win_money,bet_lost_money,summary,create_time,update_time
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id!=null and id!=''">
+                AND id = #{id}
+            </if>
+            <if test="groupIds!=null and groupIds!=''">
+                AND group_id in
+                <foreach collection="groupIds" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="tgUserIds!=null and tgUserIds!=''">
+                AND tg_user_id in
+                <foreach collection="tgUserIds" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="tgUsernames!=null and tgUsernames!=''">
+                AND tg_username in
+                <foreach collection="tgUsernames" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="usernames!=null and usernames!=''">
+                AND username in
+                <foreach collection="usernames" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="password!=null and password!=''">
+                AND password = #{password}
+            </if>
+            <if test="googleCode!=null and googleCode!=''">
+                AND google_code = #{googleCode}
+            </if>
+            <if test="percent!=null and percent!=''">
+                AND percent = #{percent}
+            </if>
+            <if test="statuss!=null and statuss!=''">
+                AND status in
+                <foreach collection="statuss" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="types!=null and types!=''">
+                AND type in
+                <foreach collection="types" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="isOwners!=null and isOwners!=''">
+                AND is_owner in
+                <foreach collection="isOwners" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="isAdmins!=null and isAdmins!=''">
+                AND is_admin in
+                <foreach collection="isAdmins" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="usdtBalances!=null and usdtBalances!=''">
+                AND usdt_balance in
+                <foreach collection="usdtBalances" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="usdtAddresss!=null and usdtAddresss!=''">
+                AND usdt_address in
+                <foreach collection="usdtAddresss" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="betTotalMoney!=null and betTotalMoney!=''">
+                AND bet_total_money = #{betTotalMoney}
+            </if>
+            <if test="betWinMoney!=null and betWinMoney!=''">
+                AND bet_win_money = #{betWinMoney}
+            </if>
+            <if test="betLostMoney!=null and betLostMoney!=''">
+                AND bet_lost_money = #{betLostMoney}
+            </if>
+            <if test="summary!=null and summary!=''">
+                AND summary = #{summary}
+            </if>
+            <if test="createTimeBegin!=null">
+                AND create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd!=null">
+                AND create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="updateTimeBegin!=null">
+                AND update_time >= #{updateTimeBegin}
+            </if>
+            <if test="updateTimeEnd!=null">
+                AND update_time &lt;= #{updateTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

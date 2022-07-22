@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tggame.bot.dao.mapper.BotMapper">
+    <resultMap id="rs_base" type="com.tggame.bot.entity.Bot">
+        <result property="id" column="id"/>
+        <result property="tgBotId" column="tg_bot_id"/>
+        <result property="name" column="name"/>
+        <result property="tgToken" column="tg_token"/>
+        <result property="botOwnerUsername" column="bot_owner_username"/>
+        <result property="tgPhone" column="tg_phone"/>
+        <result property="shareLink" column="share_link"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        id
+        ,tg_bot_id,name,tg_token,bot_owner_username,tg_phone,share_link,status,create_time,update_time
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id!=null and id!=''">
+                AND id = #{id}
+            </if>
+            <if test="tgBotIds!=null and tgBotIds!=''">
+                AND tg_bot_id in
+                <foreach collection="tgBotIds" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="names!=null and names!=''">
+                AND name in
+                <foreach collection="names" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="tgTokens!=null and tgTokens!=''">
+                AND tg_token in
+                <foreach collection="tgTokens" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="botOwnerUsernames!=null and botOwnerUsernames!=''">
+                AND bot_owner_username in
+                <foreach collection="botOwnerUsernames" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="tgPhone!=null and tgPhone!=''">
+                AND tg_phone = #{tgPhone}
+            </if>
+            <if test="shareLink!=null and shareLink!=''">
+                AND share_link = #{shareLink}
+            </if>
+            <if test="statuss!=null and statuss!=''">
+                AND status in
+                <foreach collection="statuss" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="createTimeBegin!=null">
+                AND create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd!=null">
+                AND create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="updateTimeBegin!=null">
+                AND update_time >= #{updateTimeBegin}
+            </if>
+            <if test="updateTimeEnd!=null">
+                AND update_time &lt;= #{updateTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

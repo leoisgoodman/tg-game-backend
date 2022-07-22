@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tggame.lottery.dao.mapper.LotteryMapper">
+    <resultMap id="rs_base" type="com.tggame.lottery.entity.Lottery">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="preId" column="pre_id"/>
+        <result property="code" column="code"/>
+        <result property="status" column="status"/>
+        <result property="summary" column="summary"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        id
+        ,name,pre_id,code,status,summary
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id!=null and id!=''">
+                AND id = #{id}
+            </if>
+            <if test="name!=null and name!=''">
+                AND name = #{name}
+            </if>
+            <if test="preIds!=null and preIds!=''">
+                AND pre_id in
+                <foreach collection="preIds" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="code!=null and code!=''">
+                AND code = #{code}
+            </if>
+            <if test="statuss!=null and statuss!=''">
+                AND status in
+                <foreach collection="statuss" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="summary!=null and summary!=''">
+                AND summary = #{summary}
+            </if>
+        </where>
+    </sql>
+
+</mapper>

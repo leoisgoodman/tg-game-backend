@@ -2,5 +2,6 @@ include 'core'
 include 'common'
 include 'facade'
 
+include 'service'
 include 'tggame'
 

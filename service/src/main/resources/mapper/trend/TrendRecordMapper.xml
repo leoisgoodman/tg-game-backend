@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tggame.trend.dao.mapper.TrendRecordMapper">
+    <resultMap id="rs_base" type="com.tggame.trend.entity.TrendRecord">
+        <result property="id" column="id"/>
+        <result property="lotteryId" column="lottery_id"/>
+        <result property="issue" column="issue"/>
+        <result property="data" column="data"/>
+        <result property="openTime" column="open_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+
+    <sql id="columns">
+        id
+        ,lottery_id,issue,data,open_time,create_time
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id!=null and id!=''">
+                AND id = #{id}
+            </if>
+            <if test="lotteryIds!=null and lotteryIds!=''">
+                AND lottery_id in
+                <foreach collection="lotteryIds" index="index" item="stateIn" open="(" separator="," close=")">
+                    #{stateIn}
+                </foreach>
+            </if>
+            <if test="issue!=null and issue!=''">
+                AND issue = #{issue}
+            </if>
+            <if test="data!=null and data!=''">
+                AND data = #{data}
+            </if>
+            <if test="openTimeBegin!=null">
+                AND open_time >= #{openTimeBegin}
+            </if>
+            <if test="openTimeEnd!=null">
+                AND open_time &lt;= #{openTimeEnd}
+            </if>
+            <if test="createTimeBegin!=null">
+                AND create_time >= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd!=null">
+                AND create_time &lt;= #{createTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+</mapper>
