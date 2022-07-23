@@ -166,7 +166,7 @@ public class BetOrderController {
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
         String price = openRecord.getNum();
-        int num = Integer.parseInt(price.split(".")[1]);
+        int num = Integer.parseInt(price.split("\\.")[1]);
         String bigSmall = num >= 5 ? "大" : "小";
         String oddEven = num % 2 == 0 ? "双" : "单";
         String result = num + "," + bigSmall + "," + oddEven;
