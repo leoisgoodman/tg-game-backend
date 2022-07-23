@@ -26,7 +26,7 @@ public class TrendBuildEventListener {
      */
     @Async
     @EventListener(TrendBuildEvent.class)
-    public void createOrder(TrendBuildEvent trendBuildEvent) {
+    public void trendRecordCreate(TrendBuildEvent trendBuildEvent) {
         try {
             OpenRecord openRecord = trendBuildEvent.getOpenRecord();
 

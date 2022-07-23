@@ -8,6 +8,7 @@ import com.baidu.fsg.uid.UidGenerator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tggame.RedisKey;
 import com.tggame.cache.service.RedisServiceSVImpl;
+import com.tggame.events.BetOrderDrawnEvent;
 import com.tggame.events.TrendBuildEvent;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
@@ -69,6 +70,7 @@ public class OpenLotteryService {
 
         // 4.统计走势
         applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
+        applicationEventPublisher.publishEvent(new BetOrderDrawnEvent(this, openRecord));
     }
 
     @Transactional(rollbackFor = Exception.class)
