@@ -1,6 +1,11 @@
 package com.tggame.service;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.tggame.RedisKey;
+import com.tggame.cache.service.RedisServiceSVImpl;
 import com.tggame.events.TrendBuildEvent;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
@@ -22,6 +27,9 @@ public class OpenLotteryService {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Autowired
+    private RedisServiceSVImpl redisServiceSV;
+
     /**
      * 实现开奖业务
      * 1.ws拉取奖源结果
@@ -29,9 +37,21 @@ public class OpenLotteryService {
      * 3.开启下一期并生成新的一起进行ready状态
      * 4.统计走势
      */
-    public void open() {
-        //1.ws拉取奖源结果 todo
-        String num = null;
+    public void open() throws Exception {
+        // 1.ws拉取奖源结果
+        Long time =
+                new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
+        String btcKey = RedisKey.genBTCKey(time);
+        if (!redisServiceSV.hasKey(btcKey)) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new Exception(e);
+            }
+        }
+        String num = (String) redisServiceSV.get(btcKey);
+        log.info("获取到的BTC的价格为:{}",num);
+
 
         //2.更新开奖记录
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
@@ -49,6 +69,6 @@ public class OpenLotteryService {
                 .build());
 
         //4.统计走势
-        applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
+//        applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
     }
 }
