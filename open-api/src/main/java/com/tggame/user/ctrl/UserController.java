@@ -69,24 +69,6 @@ public class UserController {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
 
-        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
-                .eq(Group::getTgGroupId, userSaveVO.getGroupId()));
-
-        if (null == group) {
-            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
-        }
-
-        int count = userService.count(new LambdaQueryWrapper<User>()
-                .eq(User::getGroupId, group.getId())
-                .eq(User::getTgUserId, userSaveVO.getTgUserId()));
-        if (count > 0) {
-            throw new UserException(BaseException.BaseExceptionEnum.Exists);
-        }
-
-        User newUser = new User();
-        BeanUtils.copyProperties(userSaveVO, newUser);
-        newUser.setGroupId(group.getId());
-        userService.save(newUser);
 
         String toNewUser = "欢迎 @{at} 加入\n" +
                 "快速开始教程\n" +
@@ -104,6 +86,26 @@ public class UserController {
                 "/start - 开启游戏\n" +
                 "/stop - 关闭游戏\n" +
                 "/help - 游戏说明";
+
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, userSaveVO.getGroupId()));
+
+        if (null == group) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+        int count = userService.count(new LambdaQueryWrapper<User>()
+                .eq(User::getGroupId, group.getId())
+                .eq(User::getTgUserId, userSaveVO.getTgUserId()));
+        if (count > 0) {
+            return R.success(toNewUser.replace("{at}", userSaveVO.getTgUsername()));
+        }
+
+        User newUser = new User();
+        BeanUtils.copyProperties(userSaveVO, newUser);
+        newUser.setGroupId(group.getId());
+        userService.save(newUser);
+
 
         return R.success(toNewUser.replace("{at}", newUser.getTgUsername()));
     }
