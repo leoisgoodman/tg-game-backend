@@ -16,7 +16,6 @@ import com.tggame.group.service.GroupService;
 import com.tggame.group.vo.GroupPageVO;
 import com.tggame.group.vo.GroupSaveVO;
 import com.tggame.group.vo.GroupVO;
-import com.tggame.group.vo.LeftGroupVO;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -113,11 +112,28 @@ public class GroupController {
      * @param tgGroupId tg群id
      * @return GroupVO
      */
-    @ApiOperation(value = "创建Group", notes = "创建Group")
+    @ApiOperation(value = "根据条件tgGroupId查询tg群一个详情信息", notes = "根据条件tgGroupId查询tg群一个详情信息")
     @GetMapping("/load/tgGroupId/{tgGroupId}")
     public GroupVO loadByTgGroupId(@PathVariable java.lang.String tgGroupId) {
         Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
                 .eq(Group::getTgGroupId, tgGroupId));
+        GroupVO groupVO = new GroupVO();
+        BeanUtils.copyProperties(group, groupVO);
+        log.debug(JSON.toJSONString(groupVO));
+        return groupVO;
+    }
+
+    /**
+     * 根据条件GroupId查询tg群一个详情信息
+     *
+     * @param groupId tg群id
+     * @return GroupVO
+     */
+    @ApiOperation(value = "根据条件GroupId查询tg群一个详情信息", notes = "根据条件GroupId查询tg群一个详情信息")
+    @GetMapping("/load/id/{groupId}")
+    public GroupVO loadByGroupId(@PathVariable java.lang.String groupId) {
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getId, groupId));
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(group, groupVO);
         log.debug(JSON.toJSONString(groupVO));
