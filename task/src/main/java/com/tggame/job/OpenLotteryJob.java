@@ -17,10 +17,10 @@ public class OpenLotteryJob {
     private OpenLotteryService openLotteryService;
 
     /**
-     * 每2分钟查询一次奖源，进行开奖
+     * 每2分钟第3秒查询一次奖源，进行开奖
      */
-    @Scheduled(cron = "0 0/2 * * * ?")
-    public void execute() throws Exception{
+    @Scheduled(cron = "3 0/2 * * * ?")
+    public void execute() {
         log.info("开始开奖");
         openLotteryService.open();
     }
