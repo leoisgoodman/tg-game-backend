@@ -62,7 +62,7 @@ public class OpenLotteryService {
         openRecordService.save(OpenRecord.builder()
                 .id(String.valueOf(uidGenerator.getUID()))
                 .issue(Long.parseLong(DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
-                .status(OpenRecordStatus.Ready.name())
+                .status(OpenRecordStatus.Enable.name())
                 .createTime(new Date())
                 .updateTime(new Date())
                 .build());
