@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -139,7 +140,7 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
         GroupBet groupBet = groupBetDAO.selectOne(new LambdaQueryWrapper<GroupBet>()
                 .eq(GroupBet::getGroupId, group.getId())
                 .eq(GroupBet::getGroupLotteryId, groupLottery.getLotteryId())
-                .eq(GroupBet::getCode, betCode)
+                .eq(GroupBet::getCode, betCode.toLowerCase(Locale.ROOT))
                 .eq(GroupBet::getStatus, GroupBetStatus.Enable));
         if (null == groupBet) {
             log.error("投注项不存在错误-{}", betCode);
