@@ -107,9 +107,9 @@ public class TrendRecordController {
         }
 
         List<List<String>> arrayList = new ArrayList<>();
-        trendRecordList.forEach(trendRecord -> {
-            arrayList.add(Lists.newArrayList(trendRecord.getOpenTime(), trendRecord.getData().split(".")[1]));
-        });
+        for (TrendRecord trendRecord : trendRecordList) {
+            arrayList.add(Lists.newArrayList(trendRecord.getOpenTime(), trendRecord.getData().split("\\.")[1]));
+        }
         return R.success(arrayList);
     }
 
