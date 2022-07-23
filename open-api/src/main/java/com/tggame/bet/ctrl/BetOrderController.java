@@ -147,7 +147,7 @@ public class BetOrderController {
      *
      * @return BetOrderVO
      */
-    @ApiOperation(value = "创建BetOrder", notes = "创建BetOrder")
+    @ApiOperation(value = "根据条件tgUserId查询投注一个详情信息", notes = "根据条件tgUserId查询投注一个详情信息")
     @GetMapping("/load/{tgGroupId}/{tgUserId}/{tgBotId}")
     public String loadDetail(@PathVariable String tgGroupId, @PathVariable String tgUserId, @PathVariable String tgBotId) {
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()

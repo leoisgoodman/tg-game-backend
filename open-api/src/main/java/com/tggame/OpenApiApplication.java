@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //@EnableDiscoveryClient
 //@EnableFeignClients
 @SpringBootApplication
-public class TgGameApplication {
+public class OpenApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TgGameApplication.class, args);
+        SpringApplication.run(OpenApiApplication.class, args);
     }
 
 }
