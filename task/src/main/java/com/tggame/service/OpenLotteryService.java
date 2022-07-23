@@ -42,35 +42,30 @@ public class OpenLotteryService {
     @Transactional(rollbackFor = Exception.class)
     public void open() {
         // 1.ws拉取奖源结果
-        Long time =
-                new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
+        Long time = new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
 
         String btcKey = RedisKey.genBTCKey(time);
         String num = (String) redisServiceSV.get(btcKey);
         log.info("获取到的BTC的价格为:{}", num);
 
-      // 2.更新开奖记录  状态是为封盘的
-      OpenRecord openRecord =
-              openRecordService.getOne(
-                      new LambdaQueryWrapper<OpenRecord>()
-                              .eq(OpenRecord::getStatus, OpenRecordStatus.Lock)
-                              .orderByDesc(OpenRecord::getIssue)
-                              .last("limit 1"));
+        // 2.更新开奖记录  状态是为封盘的
+        OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Lock)
+                .orderByDesc(OpenRecord::getIssue)
+                .last("limit 1"));
         openRecord.setNum(num);
         openRecord.setStatus(OpenRecordStatus.Drawn.name());
         openRecord.setUpdateTime(new Date());
         openRecordService.updateById(openRecord);
 
-      // 3.开启下一期并生成新的一起进行Enable状态
-      openRecordService.save(
-              OpenRecord.builder()
-                      .id(String.valueOf(uidGenerator.getUID()))
-                      .issue(Long.parseLong(DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN)
-                              .substring(0, 12)))
-                      .status(OpenRecordStatus.Ready.name())
-                      .createTime(new Date())
-                      .updateTime(new Date())
-                      .build());
+        // 3.开启下一期并生成新的一起进行Enable状态
+        openRecordService.save(OpenRecord.builder()
+                .id(String.valueOf(uidGenerator.getUID()))
+                .issue(Long.parseLong(DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
+                .status(OpenRecordStatus.Ready.name())
+                .createTime(new Date())
+                .updateTime(new Date())
+                .build());
 
         // 4.统计走势
         applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
@@ -78,13 +73,12 @@ public class OpenLotteryService {
 
     @Transactional(rollbackFor = Exception.class)
     public void lock() throws Exception {
-      // 查询最新的可投注数据
-      OpenRecord openRecord =
-              openRecordService.getOne(
-                      new LambdaQueryWrapper<OpenRecord>()
-                              .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
-                              .orderByDesc(OpenRecord::getIssue)
-                              .last("limit 1"));
+        // 查询最新的可投注数据
+        OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
+                .orderByDesc(OpenRecord::getIssue)
+                .last("limit 1"));
+
         openRecord.setStatus(OpenRecordStatus.Lock.name());
         openRecord.setUpdateTime(new Date());
         openRecordService.updateById(openRecord);
