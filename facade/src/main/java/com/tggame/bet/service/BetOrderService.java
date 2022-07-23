@@ -12,6 +12,14 @@ import com.tggame.bet.entity.BetOrder;
  * @author tg
  */
 public interface BetOrderService extends IService<BetOrder> {
+
+    /**
+     * 投注
+     *
+     * @param betOrder
+     * @param betCode
+     */
+    void bet(BetOrder betOrder, String betCode);
 }
 
 

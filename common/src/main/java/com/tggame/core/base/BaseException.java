@@ -49,10 +49,13 @@ public class BaseException extends RuntimeException implements Serializable {
         Empty_Param("9004", "Parameter is empty"),
         Exists("9005", "There is already exists"),
         Result_Not_Exist("9006", "The query result does not exist"),
+
         //-----------------上传文件异常定义[9500~9599]--------------------------
         Build_Exist("9500", "build exist"),
+
         //-----------------账户异常定义[1000~1050]--------------------------
         Account_Error("1000", "There is Error of Account and Password."),
+        Balance_Not_Enough("1001", "账户余额不足"),
         Phone_Error("1001", "Phone format msg."),
         ;
 
