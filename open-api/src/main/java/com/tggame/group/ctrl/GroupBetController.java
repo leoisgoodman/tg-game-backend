@@ -11,8 +11,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.GroupBetException;
+import com.tggame.group.entity.Group;
 import com.tggame.group.entity.GroupBet;
+import com.tggame.group.entity.GroupBetStatus;
+import com.tggame.group.entity.GroupBetType;
 import com.tggame.group.service.GroupBetService;
+import com.tggame.group.service.GroupService;
 import com.tggame.group.vo.GroupBetPageVO;
 import com.tggame.group.vo.GroupBetSaveVO;
 import com.tggame.group.vo.GroupBetVO;
@@ -38,6 +42,9 @@ import java.util.List;
 public class GroupBetController {
     @Autowired
     private GroupBetService groupBetService;
+
+    @Autowired
+    private GroupService groupService;
 
 
     /**
@@ -114,6 +121,31 @@ public class GroupBetController {
     public GroupBetVO loadByCode(@PathVariable java.lang.String code) {
         GroupBet groupBet = groupBetService.getOne(new LambdaQueryWrapper<GroupBet>()
                 .eq(GroupBet::getCode, code));
+        GroupBetVO groupBetVO = new GroupBetVO();
+        BeanUtils.copyProperties(groupBet, groupBetVO);
+        log.debug(JSON.toJSONString(groupBetVO));
+        return groupBetVO;
+    }
+
+
+    /**
+     * 查詢兩面盤的投注默認金額
+     *
+     * @param tgGroupId tg群id
+     * @return GroupBetVO
+     */
+    @ApiOperation(value = "查詢兩面盤的投注默認金額", notes = "查詢兩面盤的投注默認金額")
+    @GetMapping("/load/bothSides/{tgGroupId}")
+    public GroupBetVO loadByBothSidesBetMoney(@PathVariable java.lang.String tgGroupId) {
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, tgGroupId));
+
+        GroupBet groupBet = groupBetService.getOne(new LambdaQueryWrapper<GroupBet>()
+                .eq(GroupBet::getGroupId, group.getId())
+                .eq(GroupBet::getType, GroupBetType.Both_Sides)
+                .eq(GroupBet::getStatus, GroupBetStatus.Enable)
+                .last("limit 1"));
+
         GroupBetVO groupBetVO = new GroupBetVO();
         BeanUtils.copyProperties(groupBet, groupBetVO);
         log.debug(JSON.toJSONString(groupBetVO));
