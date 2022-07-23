@@ -85,7 +85,6 @@ public class UserController {
 
         User newUser = new User();
         BeanUtils.copyProperties(userSaveVO, newUser);
-        //todo 需要处理创建用户以及加群操作
         newUser.setGroupId(group.getId());
         userService.save(newUser);
 
