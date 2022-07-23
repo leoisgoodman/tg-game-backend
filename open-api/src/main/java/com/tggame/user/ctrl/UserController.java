@@ -59,8 +59,8 @@ public class UserController {
      */
     @ApiOperation(value = "创建User", notes = "创建User")
     @PostMapping("/build")
-    public String build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
-                        @RequestBody UserSaveVO userSaveVO) {
+    public R build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
+                   @RequestBody UserSaveVO userSaveVO) {
 
         if (StringUtils.isBlank(userSaveVO.getTgUserId())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
@@ -95,13 +95,18 @@ public class UserController {
                 "2. 开奖号取币安的BTC/USDT价格双数分钟的开盘价，取值到小数点后一位，例如币安BTC/USDT的价格是49617.8，则开奖号码的算法：4+9+6+1+7+8=35，取个位数5为开奖号码\n" +
                 "3. 本系统专业为博彩双方服务，不参与任何形式博彩，无需担心庄家输了赖帐，请放心存款\n" +
                 "4. 操作命令：\n" +
-                "/start 开启彩票\n" +
-                "/stop 关闭彩票\n" +
-                "/mini H5小程序 \n" +
-                "/help 查看帮助\n" +
-                "/doc 操作指南";
+                "app -  小程序\n" +
+                "big - 投注大 100,如/big 100\n" +
+                "small - 投注小 100,如/small 100\n" +
+                "odd - 投注单 100,如/odd 100\n" +
+                "even - 投注双 100,如/even 100\n" +
+                "num - 投注数字 123 100,如/num 123 100\n" +
+                "my - 我的投注 \n" +
+                "start - 开启游戏\n" +
+                "stop - 关闭游戏\n" +
+                "help - 游戏说明";
 
-        return toNewUser;
+        return R.success(toNewUser.replace("{at}", newUser.getTgUsername()));
     }
 
 
