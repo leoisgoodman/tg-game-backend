@@ -6,7 +6,6 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tggame.RedisKey;
 import com.tggame.cache.service.RedisServiceSVImpl;
-import com.tggame.events.TrendBuildEvent;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
 import com.tggame.open.service.OpenRecordService;
@@ -44,12 +43,11 @@ public class OpenLotteryService {
             throw new Exception(e);
         }
         // 1.ws拉取奖源结果
-        Long time =
-                new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
+        Long time = new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
 
         String btcKey = RedisKey.genBTCKey(time);
         String num = (String) redisServiceSV.get(btcKey);
-        log.info("获取到的BTC的价格为:{}",num);
+        log.info("获取到的BTC的价格为:{}", num);
 
 
         //2.更新开奖记录
