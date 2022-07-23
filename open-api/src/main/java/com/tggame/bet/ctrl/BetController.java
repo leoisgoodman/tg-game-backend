@@ -8,11 +8,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.RedisKey;
 import com.tggame.bet.entity.Bet;
 import com.tggame.bet.service.BetService;
 import com.tggame.bet.vo.BetPageVO;
 import com.tggame.bet.vo.BetSaveVO;
 import com.tggame.bet.vo.BetVO;
+import com.tggame.cache.service.RedisServiceSVImpl;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.BetException;
@@ -38,6 +40,9 @@ import java.util.List;
 public class BetController {
     @Autowired
     private BetService betService;
+
+    @Autowired
+    private RedisServiceSVImpl redisServiceSV;
 
 
     /**
@@ -158,6 +163,63 @@ public class BetController {
         return new Page<>();
     }
 
+
+    /**
+     * 开始投注控制
+     *
+     * @return R
+     */
+    @ApiOperation(value = "开始投注控制", notes = "开始投注控制")
+    @PutMapping("/start/{tgGroupId}/{tgBotId}")
+    public boolean start(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
+        if (StringUtils.isBlank(tgGroupId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        if (StringUtils.isBlank(tgBotId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        String cacheKey = RedisKey.getBetStatusKey(tgGroupId, tgBotId);
+        redisServiceSV.set(cacheKey, true);
+        return true;
+    }
+
+    /**
+     * 停止投注控制
+     *
+     * @return R
+     */
+    @ApiOperation(value = "停止投注控制", notes = "停止投注控制")
+    @PutMapping("/stop/{tgGroupId}/{tgBotId}")
+    public boolean stop(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
+        if (StringUtils.isBlank(tgGroupId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        if (StringUtils.isBlank(tgBotId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        String cacheKey = RedisKey.getBetStatusKey(tgGroupId, tgBotId);
+        redisServiceSV.set(cacheKey, false);
+        return true;
+    }
+
+    /**
+     * 是否可以投注状态
+     *
+     * @return R
+     */
+    @ApiOperation(value = "是否可以投注状态", notes = "是否可以投注状态")
+    @PutMapping("/status/{tgGroupId}/{tgBotId}")
+    public boolean status(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
+        if (StringUtils.isBlank(tgGroupId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        if (StringUtils.isBlank(tgBotId)) {
+            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+        }
+        String cacheKey = RedisKey.getBetStatusKey(tgGroupId, tgBotId);
+        boolean isBet = (boolean) redisServiceSV.get(cacheKey);
+        return isBet;
+    }
 
     /**
      * 修改 玩法

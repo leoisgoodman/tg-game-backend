@@ -12,5 +12,15 @@ public enum RedisKey {
     }
 
 
+    /**
+     * 获取投注游戏状态 key
+     *
+     * @param tgGroupId tg 群id
+     * @param tgBotId   tg 机器人id
+     * @return key
+     */
+    public static String getBetStatusKey(String tgGroupId, String tgBotId) {
+        return preFix + ":" + tgGroupId + ":" + tgBotId;
+    }
 }
 
