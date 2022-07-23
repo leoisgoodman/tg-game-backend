@@ -57,83 +57,19 @@ public class BetOrderController {
     @PostMapping("/build")
     public BetOrderSaveVO build(@ApiParam(name = "创建BetOrder", value = "传入json格式", required = true)
                                 @RequestBody BetOrderSaveVO betOrderSaveVO) {
-        if (StringUtils.isBlank(betOrderSaveVO.getId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getGroupId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(betOrderSaveVO.getTgGroupId())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
-        if (StringUtils.isBlank(betOrderSaveVO.getUserId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+
         if (StringUtils.isBlank(betOrderSaveVO.getTgUserId())) {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBotId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getLotteryId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getLotteryName())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetName())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetNum())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(betOrderSaveVO.getBetType())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(betOrderSaveVO.getStatus())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getOpenId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-
-        int count = betOrderService.count(new LambdaQueryWrapper<BetOrder>()
-                .eq(BetOrder::getId, betOrderSaveVO.getId())
-                .eq(BetOrder::getGroupId, betOrderSaveVO.getGroupId())
-                .eq(BetOrder::getTgGroupId, betOrderSaveVO.getTgGroupId())
-                .eq(BetOrder::getUserId, betOrderSaveVO.getUserId())
-                .eq(BetOrder::getTgUserId, betOrderSaveVO.getTgUserId())
-                .eq(BetOrder::getBotId, betOrderSaveVO.getBotId())
-                .eq(BetOrder::getLotteryId, betOrderSaveVO.getLotteryId())
-                .eq(BetOrder::getLotteryName, betOrderSaveVO.getLotteryName())
-                .eq(BetOrder::getBetId, betOrderSaveVO.getBetId())
-                .eq(BetOrder::getBetName, betOrderSaveVO.getBetName())
-                .eq(BetOrder::getBetNum, betOrderSaveVO.getBetNum())
-                .eq(BetOrder::getOdds, betOrderSaveVO.getOdds())
-                .eq(BetOrder::getBetType, betOrderSaveVO.getBetType())
-                .eq(BetOrder::getPayBackPercent, betOrderSaveVO.getPayBackPercent())
-                .eq(BetOrder::getAmount, betOrderSaveVO.getAmount())
-                .eq(BetOrder::getWinAmount, betOrderSaveVO.getWinAmount())
-                .eq(BetOrder::getShouldPayAmount, betOrderSaveVO.getShouldPayAmount())
-                .eq(BetOrder::getStatus, betOrderSaveVO.getStatus())
-                .eq(BetOrder::getOpenId, betOrderSaveVO.getOpenId())
-                .eq(BetOrder::getCreateTime, betOrderSaveVO.getCreateTime())
-                .eq(BetOrder::getUpdateTime, betOrderSaveVO.getUpdateTime())
-        );
-        if (count > 0) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Exists);
         }
 
         BetOrder newBetOrder = new BetOrder();
         BeanUtils.copyProperties(betOrderSaveVO, newBetOrder);
 
-        betOrderService.save(newBetOrder);
+        betOrderService.bet(newBetOrder, betOrderSaveVO.getBetCode());
 
         betOrderSaveVO = new BetOrderSaveVO();
         BeanUtils.copyProperties(newBetOrder, betOrderSaveVO);

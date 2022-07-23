@@ -4,6 +4,7 @@
 package com.tggame.bet.vo;
 
 import com.tggame.bet.entity.BetOrder;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -13,5 +14,8 @@ import lombok.Data;
  */
 @Data
 public class BetOrderSaveVO extends BetOrder implements java.io.Serializable {
+
+    @ApiModelProperty(value = "投注項編碼")
+    private java.lang.String betCode;
 
 }
