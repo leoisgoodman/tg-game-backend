@@ -151,7 +151,7 @@ CREATE TABLE open_record
 (
     id          varchar(64) NOT NULL comment 'id',
     lottery_id  varchar(64) comment '彩种id',
-    issue       int(10) comment '期号',
+    issue       bigint(20) comment '期号',
     num         varchar(16) comment '开奖号码',
     status      varchar(16) comment '状态：就绪 Ready，可投注 Enable，封盘  Lock，已开奖 Drawn ,作废  Invalid',
     create_time datetime    NULL comment '创建时间',
@@ -193,7 +193,7 @@ CREATE TABLE trend_record
 (
     id          varchar(64) NOT NULL comment 'id',
     lottery_id  varchar(64) comment '彩种id',
-    issue       int(10) comment '期号',
+    issue       bigint(20) comment '期号',
     data        varchar(64) comment '走势数据',
     open_time   varchar(16) comment '开奖时间',
     create_time datetime    NULL comment '创建时间',
