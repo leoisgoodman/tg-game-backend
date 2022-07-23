@@ -6,6 +6,7 @@ package com.tggame.user.ctrl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -98,6 +99,10 @@ public class UserController {
                 .eq(User::getGroupId, group.getId())
                 .eq(User::getTgUserId, userSaveVO.getTgUserId()));
         if (count > 0) {
+            userService.update(new LambdaUpdateWrapper<User>()
+                    .set(User::getStatus, UserStatus.Enable)
+                    .set(User::getUpdateTime, new Date())
+                    .eq(User::getTgUserId, userSaveVO.getTgUserId()));
             return R.success(toNewUser.replace("{at}", userSaveVO.getTgUsername()));
         }
 
