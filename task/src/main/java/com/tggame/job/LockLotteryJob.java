@@ -17,10 +17,10 @@ public class LockLotteryJob {
     private OpenLotteryService openLotteryService;
 
     /**
-     * 每奇数分钟的第45秒执行
+     * 每期数分钟的第45秒执行
      */
-    @Scheduled(cron ="45 1/2 * * * ? ")
-    public void execute() throws Exception{
+    @Scheduled(cron = "45 1/2 * * * ? ")
+    public void execute() throws Exception {
         log.info("开始封盘");
         openLotteryService.lock();
     }
