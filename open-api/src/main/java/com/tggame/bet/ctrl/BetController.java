@@ -18,6 +18,12 @@ import com.tggame.cache.service.RedisServiceSVImpl;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.BetException;
+import com.tggame.exceptions.GroupException;
+import com.tggame.group.entity.Group;
+import com.tggame.group.service.GroupService;
+import com.tggame.user.entity.User;
+import com.tggame.user.entity.UserType;
+import com.tggame.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +46,12 @@ import java.util.List;
 public class BetController {
     @Autowired
     private BetService betService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
 
     @Autowired
     private RedisServiceSVImpl redisServiceSV;
@@ -170,14 +182,22 @@ public class BetController {
      * @return R
      */
     @ApiOperation(value = "开始投注控制", notes = "开始投注控制")
-    @PutMapping("/start/{tgGroupId}/{tgBotId}")
-    public boolean start(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
-        if (StringUtils.isBlank(tgGroupId)) {
-            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+    @PutMapping("/start/{tgGroupId}/{tgBotId}/{tgUserId}")
+    public boolean start(@PathVariable String tgGroupId, @PathVariable String tgBotId, @PathVariable String tgUserId) {
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, tgGroupId));
+        if (null == group) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
         }
-        if (StringUtils.isBlank(tgBotId)) {
-            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+
+        int count = userService.count(new LambdaQueryWrapper<User>()
+                .eq(User::getTgUserId, tgUserId)
+                .eq(User::getGroupId, group.getId())
+                .eq(User::getType, UserType.Banker));
+        if (count <= 0) {
+            return false;
         }
+
         String cacheKey = RedisKey.getBetStatusKey(tgGroupId, tgBotId);
         redisServiceSV.set(cacheKey, true);
         return true;
@@ -189,13 +209,20 @@ public class BetController {
      * @return R
      */
     @ApiOperation(value = "停止投注控制", notes = "停止投注控制")
-    @PutMapping("/stop/{tgGroupId}/{tgBotId}")
-    public boolean stop(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
-        if (StringUtils.isBlank(tgGroupId)) {
-            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+    @PutMapping("/stop/{tgGroupId}/{tgBotId}/{tgUserId}")
+    public boolean stop(@PathVariable String tgGroupId, @PathVariable String tgBotId, @PathVariable String tgUserId) {
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, tgGroupId));
+        if (null == group) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
         }
-        if (StringUtils.isBlank(tgBotId)) {
-            throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);
+
+        int count = userService.count(new LambdaQueryWrapper<User>()
+                .eq(User::getTgUserId, tgUserId)
+                .eq(User::getGroupId, group.getId())
+                .eq(User::getType, UserType.Banker));
+        if (count <= 0) {
+            return false;
         }
         String cacheKey = RedisKey.getBetStatusKey(tgGroupId, tgBotId);
         redisServiceSV.set(cacheKey, false);
