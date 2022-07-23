@@ -28,6 +28,7 @@ import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
 import com.tggame.user.dao.UserDAO;
 import com.tggame.user.entity.User;
+import com.tggame.user.entity.UserType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,7 +109,8 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
         }
         //1.查詢個人賬戶餘額信息，並扣除餘額
         User user = userDAO.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getTgUserId, betOrder.getTgUserId()));
+                .eq(User::getTgUserId, betOrder.getTgUserId())
+                .eq(User::getType, UserType.Player));
         if (null == user) {
             log.error("用戶不存在投注非法-{}", betOrder);
             throw new UserException(BaseException.BaseExceptionEnum.Result_Not_Exist);

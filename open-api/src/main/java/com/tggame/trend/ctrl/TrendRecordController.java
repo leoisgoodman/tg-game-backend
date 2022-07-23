@@ -3,11 +3,15 @@
  */
 package com.tggame.trend.ctrl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.TrendRecordException;
@@ -24,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,6 +88,29 @@ public class TrendRecordController {
         BeanUtils.copyProperties(newTrendRecord, trendRecordSaveVO);
         log.debug(JSON.toJSONString(trendRecordSaveVO));
         return trendRecordSaveVO;
+    }
+
+
+    /**
+     * 统计趋势图
+     *
+     * @param groupId 群id
+     * @return TrendRecordVO
+     */
+    @ApiOperation(value = "群id", notes = "群id")
+    @GetMapping("/count/{groupId}")
+    public R count(@PathVariable java.lang.String groupId) {
+        List<TrendRecord> trendRecordList = trendRecordService.list(new LambdaQueryWrapper<TrendRecord>()
+                .ge(TrendRecord::getCreateTime, DateUtil.offset(new Date(), DateField.HOUR, -1)));
+        if (CollectionUtils.isEmpty(trendRecordList)) {
+            return null;
+        }
+
+        List<List<String>> arrayList = new ArrayList<>();
+        for (TrendRecord trendRecord : trendRecordList) {
+            arrayList.add(Lists.newArrayList(trendRecord.getOpenTime(), trendRecord.getData().split("\\.")[1]));
+        }
+        return R.success(arrayList);
     }
 
 

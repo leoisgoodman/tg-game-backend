@@ -7,8 +7,11 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.bet.entity.BetCode;
 import com.tggame.bet.entity.BetOrder;
+import com.tggame.bet.entity.BetType;
 import com.tggame.bet.service.BetOrderService;
 import com.tggame.bet.vo.BetOrderPageVO;
 import com.tggame.bet.vo.BetOrderSaveVO;
@@ -20,6 +23,8 @@ import com.tggame.exceptions.OpenRecordException;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
 import com.tggame.open.service.OpenRecordService;
+import com.tggame.user.entity.User;
+import com.tggame.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 投注
@@ -42,6 +48,9 @@ import java.util.List;
 public class BetOrderController {
     @Autowired
     private BetOrderService betOrderService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private OpenRecordService openRecordService;
@@ -96,15 +105,43 @@ public class BetOrderController {
         List<BetOrder> betOrderList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
                 .eq(BetOrder::getTgGroupId, tgGroupId)
                 .eq(BetOrder::getTgUserId, tgUserId)
-                .eq(BetOrder::getTgBotId, tgBotId)
+                .eq(BetOrder::getOpenId, openRecord.getId())
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
-        //todo 实现投注详情
-        String detail = "第20220720888期合计投注:大:{big}|小:{small}}|单:{odd}|双:{even}\n" +
-                "号码:{num}\n" +
-                "{at}\n";
+        if (CollectionUtils.isNotEmpty(betOrderList)) {
+            List<String> betNumList = betOrderList.stream()
+                    .filter(betOrder -> BetType.Num == BetType.getEnum(betOrder.getBetType()))
+                    .map(betOrder -> betOrder.getBetNum())
+                    .collect(Collectors.toList());
 
-        return R.success(detail);
+            int bigCount = betOrderList.stream()
+                    .filter(betOrder -> BetCode.Big == BetCode.getEnum(betOrder.getBetCode()))
+                    .collect(Collectors.toList()).size();
+            int smallCount = betOrderList.stream()
+                    .filter(betOrder -> BetCode.Small == BetCode.getEnum(betOrder.getBetCode()))
+                    .collect(Collectors.toList()).size();
+            int oddCount = betOrderList.stream()
+                    .filter(betOrder -> BetCode.Odd == BetCode.getEnum(betOrder.getBetCode()))
+                    .collect(Collectors.toList()).size();
+            int evenCount = betOrderList.stream()
+                    .filter(betOrder -> BetCode.Even == BetCode.getEnum(betOrder.getBetCode()))
+                    .collect(Collectors.toList()).size();
+
+            String num = CollectionUtils.isEmpty(betNumList) ? "-" : StringUtils.join(betNumList, ",");
+
+            User user = userService.getOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getTgUserId, tgUserId));
+
+            String detail = "第%s期合计投注:\n" +
+                    "大:%s|小:%s|单:%s|双:%s\n" +
+                    "号码:%s\n" +
+                    "@%s\n";
+            detail = String.format(detail, openRecord.getIssue(), bigCount, smallCount, oddCount, evenCount, num, user.getTgUsername());
+
+            return R.success(detail);
+        }
+
+        return R.success("稍后再试");
     }
 
 
@@ -129,7 +166,7 @@ public class BetOrderController {
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
         String price = openRecord.getNum();
-        int num = Integer.parseInt(price.split(".")[1]);
+        int num = Integer.parseInt(price.split("\\.")[1]);
         String bigSmall = num >= 5 ? "大" : "小";
         String oddEven = num % 2 == 0 ? "双" : "单";
         String result = num + "," + bigSmall + "," + oddEven;

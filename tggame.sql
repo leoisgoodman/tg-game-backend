@@ -45,11 +45,12 @@ CREATE TABLE bet_order
     tg_user_id        varchar(64) NOT NULL comment 'tg下用户id',
     bot_id            varchar(64) comment '机器人id',
     lottery_id        varchar(64) comment '彩种id',
-    issue             int(10) comment '期号',
+    issue             bigint(20) comment '期号',
     lottery_name      varchar(64) comment '彩种',
     bet_id            varchar(64) comment '玩法id',
     bet_name          varchar(32) comment '玩法名',
     bet_num           varchar(32) comment '投注数字',
+    bet_code          varchar(32) comment '投注编码',
     odds              float comment '赔率',
     bet_type          varchar(16) comment '投注类型:两面 Both_Sides,号码 Num',
     pay_back_percent  float comment '返奖率，如：97.5% 存储97.5',
@@ -69,9 +70,11 @@ CREATE TABLE bet_order
     INDEX (lottery_id),
     INDEX (issue),
     INDEX (bet_id),
+    INDEX (bet_code),
     INDEX (bet_type),
     INDEX (open_id)
 ) comment ='投注';
+
 
 CREATE TABLE bot
 (

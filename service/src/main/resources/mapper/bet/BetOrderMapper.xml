@@ -14,6 +14,7 @@
         <result property="lotteryName" column="lottery_name"/>
         <result property="betId" column="bet_id"/>
         <result property="betName" column="bet_name"/>
+        <result property="betCode" column="bet_code"/>
         <result property="betNum" column="bet_num"/>
         <result property="odds" column="odds"/>
         <result property="betType" column="bet_type"/>
@@ -30,7 +31,7 @@
 
     <sql id="columns">
         id
-        ,group_id,tg_group_id,user_id,tg_user_id,bot_id,tg_bot_id,lottery_id,issue,lottery_name,bet_id,bet_name,bet_num,odds,bet_type,pay_back_percent,amount,win_amount,should_pay_amount,status,open_id,create_time,update_time
+        ,group_id,tg_group_id,user_id,tg_user_id,bot_id,tg_bot_id,lottery_id,issue,lottery_name,bet_id,bet_name,bet_code,bet_num,odds,bet_type,pay_back_percent,amount,win_amount,should_pay_amount,status,open_id,create_time,update_time
     </sql>
 
     <sql id="where">
