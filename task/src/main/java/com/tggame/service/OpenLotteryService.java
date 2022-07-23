@@ -40,12 +40,7 @@ public class OpenLotteryService {
      * 实现开奖业务 1.ws拉取奖源结果 2.保存开奖记录 3.开启下一期并生成新的一起进行ready状态 4.统计走势
      */
     @Transactional(rollbackFor = Exception.class)
-    public void open() throws Exception {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new Exception(e);
-        }
+    public void open() {
         // 1.ws拉取奖源结果
         Long time =
                 new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
