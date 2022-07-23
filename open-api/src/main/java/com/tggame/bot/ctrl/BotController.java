@@ -120,6 +120,23 @@ public class BotController {
         return botVO;
     }
 
+
+    /**
+     * 根据条件 name 查询tg机器人一个详情信息
+     *
+     * @return BotVO
+     */
+    @ApiOperation(value = "根据条件 name 查询tg机器人一个详情信息", notes = "根据条件 name 查询tg机器人一个详情信息")
+    @GetMapping("/load/name/{name}")
+    public BotVO loadByName(@PathVariable java.lang.String name) {
+        Bot bot = botService.getOne(new LambdaQueryWrapper<Bot>()
+                .eq(Bot::getName, name));
+        BotVO botVO = new BotVO();
+        BeanUtils.copyProperties(bot, botVO);
+        log.debug("查詢機器人結果-{}", botVO);
+        return botVO;
+    }
+
     /**
      * 查询tg机器人信息集合
      *
