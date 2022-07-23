@@ -28,7 +28,7 @@ public class OpenRecordPageVO extends BaseVO implements java.io.Serializable {
      * 数据库字段:issue  属性显示:期号
      */
     @ApiModelProperty(value = "期号")
-    private java.lang.Integer issue;
+    private java.lang.Long issue;
     /**
      * 数据库字段:num  属性显示:开奖号码
      */
