@@ -1,5 +1,6 @@
 package com.tggame.events;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.tggame.bet.entity.BetCode;
 import com.tggame.bet.entity.BetOrder;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 订单监听器
@@ -70,7 +72,10 @@ public class BetOrderDrawnEventListener {
                 .eq(BetOrder::getBetNum, num));
 
         // 2.为用户派彩
-
+        List<BetOrder> betOrderList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
+                .eq(BetOrder::getOpenId, openRecord.getId())
+                .eq(BetOrder::getIssue, openRecord.getIssue())
+                .eq(BetOrder::getStatus, BetOrderStatus.Win));
     }
 
 }
