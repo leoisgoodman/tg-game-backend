@@ -62,9 +62,6 @@ public class UserController {
     public String build(@ApiParam(name = "创建User", value = "传入json格式", required = true)
                         @RequestBody UserSaveVO userSaveVO) {
 
-        if (StringUtils.isBlank(userSaveVO.getGroupId())) {
-            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
         if (StringUtils.isBlank(userSaveVO.getTgUserId())) {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
@@ -72,9 +69,15 @@ public class UserController {
             throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
         }
 
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, userSaveVO.getGroupId()));
+
+        if (null == group) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
 
         int count = userService.count(new LambdaQueryWrapper<User>()
-                .eq(User::getGroupId, userSaveVO.getGroupId())
+                .eq(User::getGroupId, group.getId())
                 .eq(User::getTgUserId, userSaveVO.getTgUserId()));
         if (count > 0) {
             throw new UserException(BaseException.BaseExceptionEnum.Exists);
@@ -83,6 +86,7 @@ public class UserController {
         User newUser = new User();
         BeanUtils.copyProperties(userSaveVO, newUser);
         //todo 需要处理创建用户以及加群操作
+        newUser.setGroupId(group.getId());
         userService.save(newUser);
 
         String toNewUser = "欢迎 @{at} 加入\n" +
