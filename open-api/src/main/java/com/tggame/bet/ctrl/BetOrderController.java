@@ -132,7 +132,8 @@ public class BetOrderController {
             User user = userService.getOne(new LambdaQueryWrapper<User>()
                     .eq(User::getTgUserId, tgUserId));
 
-            String detail = "第%s期合计投注:大:%s|小:%s|单:%s|双:%s\n" +
+            String detail = "第%s期合计投注:\n" +
+                    "大:%s|小:%s|单:%s|双:%s\n" +
                     "号码:%s\n" +
                     "@%s\n";
             detail = String.format(detail, openRecord.getIssue(), bigCount, smallCount, oddCount, evenCount, num, user.getTgUsername());
