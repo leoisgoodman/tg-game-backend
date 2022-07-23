@@ -17,6 +17,7 @@ import com.tggame.exceptions.GroupException;
 import com.tggame.exceptions.TgGroupBotException;
 import com.tggame.group.entity.Group;
 import com.tggame.group.service.GroupService;
+import com.tggame.group.vo.GroupVO;
 import com.tggame.tg.entity.TgGroupBot;
 import com.tggame.tg.service.TgGroupBotService;
 import com.tggame.tg.vo.TgGroupBotPageVO;
@@ -100,7 +101,7 @@ public class TgGroupBotController {
      */
     @ApiOperation(value = "根据条件tgGroupId查询tg群一个详情信息", notes = "根据条件tgGroupId查询tg群一个详情信息")
     @GetMapping("/load/{tgGroupId}/{tgBotId}")
-    public boolean loadByTgGroupId(@PathVariable java.lang.String tgGroupId, @PathVariable java.lang.String tgBotId) {
+    public GroupVO loadByTgGroupId(@PathVariable java.lang.String tgGroupId, @PathVariable java.lang.String tgBotId) {
 
         Bot bot = botService.getOne(new LambdaQueryWrapper<Bot>()
                 .eq(Bot::getTgBotId, tgBotId));
@@ -119,10 +120,12 @@ public class TgGroupBotController {
                 .eq(TgGroupBot::getBotId, bot.getId())
                 .eq(TgGroupBot::getGroupId, group.getId()));
         if (count <= 0) {
-            return false;
+           throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
         }
 
-        return true;
+        GroupVO groupVO = new GroupVO();
+        BeanUtils.copyProperties(group, groupVO);
+        return groupVO;
     }
 
 
