@@ -73,7 +73,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice {
             if (flag) {
                 return R.success();
             } else {
-                return R.failed(BaseException.BaseExceptionEnum.Server_Error);
+                return R.failed(BaseException.BaseExceptionEnum.Result_Not_Exist);
             }
 
         }

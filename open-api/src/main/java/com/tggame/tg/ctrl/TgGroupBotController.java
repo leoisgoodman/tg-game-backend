@@ -8,9 +8,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tggame.bot.entity.Bot;
+import com.tggame.bot.service.BotService;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.exceptions.BotException;
+import com.tggame.exceptions.GroupException;
 import com.tggame.exceptions.TgGroupBotException;
+import com.tggame.group.entity.Group;
+import com.tggame.group.service.GroupService;
 import com.tggame.tg.entity.TgGroupBot;
 import com.tggame.tg.service.TgGroupBotService;
 import com.tggame.tg.vo.TgGroupBotPageVO;
@@ -38,6 +44,12 @@ import java.util.List;
 public class TgGroupBotController {
     @Autowired
     private TgGroupBotService tgGroupBotService;
+
+    @Autowired
+    private BotService botService;
+
+    @Autowired
+    private GroupService groupService;
 
 
     /**
@@ -77,6 +89,40 @@ public class TgGroupBotController {
         BeanUtils.copyProperties(newTgGroupBot, tgGroupBotSaveVO);
         log.debug(JSON.toJSONString(tgGroupBotSaveVO));
         return tgGroupBotSaveVO;
+    }
+
+
+    /**
+     * 根据条件tgGroupId查询tg群一个详情信息
+     *
+     * @param tgGroupId tg群id
+     * @return GroupVO
+     */
+    @ApiOperation(value = "根据条件tgGroupId查询tg群一个详情信息", notes = "根据条件tgGroupId查询tg群一个详情信息")
+    @GetMapping("/load/{tgGroupId}/{tgBotId}")
+    public boolean loadByTgGroupId(@PathVariable java.lang.String tgGroupId, @PathVariable java.lang.String tgBotId) {
+
+        Bot bot = botService.getOne(new LambdaQueryWrapper<Bot>()
+                .eq(Bot::getTgBotId, tgBotId));
+        if (null == bot) {
+            throw new BotException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
+                .eq(Group::getTgGroupId, tgGroupId));
+
+        if (null == group) {
+            throw new GroupException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+        int count = tgGroupBotService.count(new LambdaQueryWrapper<TgGroupBot>()
+                .eq(TgGroupBot::getBotId, bot.getId())
+                .eq(TgGroupBot::getGroupId, group.getId()));
+        if (count <= 0) {
+            return false;
+        }
+
+        return true;
     }
 
 
