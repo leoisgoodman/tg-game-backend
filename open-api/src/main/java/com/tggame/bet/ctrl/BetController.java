@@ -208,7 +208,7 @@ public class BetController {
      * @return R
      */
     @ApiOperation(value = "是否可以投注状态", notes = "是否可以投注状态")
-    @PutMapping("/status/{tgGroupId}/{tgBotId}")
+    @GetMapping("/status/{tgGroupId}/{tgBotId}")
     public boolean status(@PathVariable String tgGroupId, @PathVariable String tgBotId) {
         if (StringUtils.isBlank(tgGroupId)) {
             throw new BetException(BaseException.BaseExceptionEnum.Ilegal_Param);

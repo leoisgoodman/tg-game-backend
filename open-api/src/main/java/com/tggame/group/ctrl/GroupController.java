@@ -132,8 +132,7 @@ public class GroupController {
     @ApiOperation(value = "根据条件GroupId查询tg群一个详情信息", notes = "根据条件GroupId查询tg群一个详情信息")
     @GetMapping("/load/id/{groupId}")
     public GroupVO loadByGroupId(@PathVariable java.lang.String groupId) {
-        Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
-                .eq(Group::getId, groupId));
+        Group group = groupService.getById(groupId);
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(group, groupVO);
         log.debug(JSON.toJSONString(groupVO));

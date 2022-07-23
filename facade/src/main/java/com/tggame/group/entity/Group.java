@@ -3,6 +3,7 @@
  */
 package com.tggame.group.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -18,6 +19,7 @@ import lombok.experimental.Accessors;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@TableName("`group`")
 public class Group implements java.io.Serializable {
     /**
      * 数据库字段:id  属性显示:id
