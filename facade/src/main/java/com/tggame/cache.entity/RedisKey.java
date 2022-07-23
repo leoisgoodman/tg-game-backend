@@ -1,7 +1,7 @@
 package com.tggame;
 
 public enum RedisKey {
-  BTC(60),
+  BTC(300),
   ;
 
   private static final String preFix = "tggame";
@@ -27,6 +27,11 @@ public enum RedisKey {
     return preFix + ":" + tgGroupId + ":" + tgBotId;
   }
 
+  /**
+   * 获取btc开盘价格的key key
+   * @param time
+   * @return
+   */
   public static String genBTCKey(Long time) {
     return preFix + ":btc:" + time;
   }

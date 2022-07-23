@@ -38,17 +38,16 @@ public class OpenLotteryService {
      * 4.统计走势
      */
     public void open() throws Exception {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new Exception(e);
+        }
         // 1.ws拉取奖源结果
         Long time =
                 new DateTime(DateUtil.truncate(DateUtil.calendar(new Date()), DateField.MINUTE)).getTime();
+
         String btcKey = RedisKey.genBTCKey(time);
-        if (!redisServiceSV.hasKey(btcKey)) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new Exception(e);
-            }
-        }
         String num = (String) redisServiceSV.get(btcKey);
         log.info("获取到的BTC的价格为:{}",num);
 
