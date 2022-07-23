@@ -75,6 +75,11 @@ public class BetOrderVO implements java.io.Serializable {
     @ApiModelProperty(value = "玩法名")
     private java.lang.String betName;
     /**
+     * 数据库字段:bet_code  属性显示:玩法编码
+     */
+    @ApiModelProperty(value = "玩法编码")
+    private java.lang.String betCode;
+    /**
      * 数据库字段:bet_num  属性显示:投注数字
      */
     @ApiModelProperty(value = "投注数字")
