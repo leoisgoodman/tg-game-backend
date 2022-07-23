@@ -79,10 +79,9 @@ public class BTCWebSocketClient extends WebSocketClient {
                 return;
             }
             String btcValue = objDataK.getString("o");
-            String value = btcValue.substring(0, btcValue.length() - 1);
+            String value = btcValue.substring(0, btcValue.indexOf(".") + 2);
             redisServiceSV.set(btcKey, value, RedisKey.BTC.time);
             log.debug("redis的key:{},值为:{}", btcKey, value);
         }
     }
-
 }
