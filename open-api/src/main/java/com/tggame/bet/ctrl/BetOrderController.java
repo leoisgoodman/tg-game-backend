@@ -149,7 +149,7 @@ public class BetOrderController {
      */
     @ApiOperation(value = "根据条件tgUserId查询投注一个详情信息", notes = "根据条件tgUserId查询投注一个详情信息")
     @GetMapping("/load/{tgGroupId}/{tgUserId}/{tgBotId}")
-    public String loadDetail(@PathVariable String tgGroupId, @PathVariable String tgUserId, @PathVariable String tgBotId) {
+    public R loadDetail(@PathVariable String tgGroupId, @PathVariable String tgUserId, @PathVariable String tgBotId) {
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Enable));
         if (null == openRecord) {
@@ -164,11 +164,11 @@ public class BetOrderController {
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
         //todo 实现投注详情
-        String detail = "第20220720888期合计投注:大:{big}|小:{small}|单:{even}|双:{odd}\n" +
+        String detail = "第20220720888期合计投注:大:{big}|小:{small}}|单:{odd}|双:{even}\n" +
                 "号码:{num}\n" +
                 "{at}\n";
 
-        return detail;
+        return R.success(detail);
     }
 
 
@@ -179,7 +179,7 @@ public class BetOrderController {
      */
     @ApiOperation(value = "根据群id，统计当期投注情况", notes = "根据群id，统计当期投注情况")
     @GetMapping("/count/{tgGroupId}")
-    public String countDetail(@PathVariable String tgGroupId) {
+    public R countDetail(@PathVariable String tgGroupId) {
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Lock));
         if (null == openRecord) {
@@ -215,7 +215,7 @@ public class BetOrderController {
                 "号码赔率 9.8\n" +
                 "号码限红 10 ~ 500";
 
-        return detail;
+        return R.success(detail);
     }
 
 
