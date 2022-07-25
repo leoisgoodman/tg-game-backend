@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -106,7 +107,7 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
                 .last("limit 1"));
         if (null == openRecord) {
             log.error("没有可投注期号错误-{}-{}", betOrder, betCode);
-            throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+            throw new OpenRecordException(BaseException.BaseExceptionEnum.Bet_Lock);
         }
         //1.查詢個人賬戶餘額信息，並扣除餘額
         User user = userDAO.selectOne(new LambdaQueryWrapper<User>()
@@ -189,8 +190,8 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
 
         betOrder.setIssue(openRecord.getIssue());
         betOrder.setOpenId(openRecord.getId());
-
-        betOrder.setShouldPayAmount(betOrder.getAmount() * betOrder.getOdds() * betOrder.getPayBackPercent());
+        Double shouldPayAmount = Double.parseDouble(new DecimalFormat("######0.00").format(betOrder.getAmount() * betOrder.getOdds() * betOrder.getPayBackPercent() / 100));
+        betOrder.setShouldPayAmount(shouldPayAmount);
         betOrder.setWinAmount(betOrder.getAmount() * betOrder.getOdds());
 
         this.save(betOrder);

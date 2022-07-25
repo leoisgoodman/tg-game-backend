@@ -57,7 +57,8 @@ public class BaseException extends RuntimeException implements Serializable {
         Account_Error("1000", "There is Error of Account and Password."),
         Balance_Not_Enough("1001", "账户余额不足"),
         Phone_Error("1001", "Phone format msg."),
-        Not_Drawn("1002","Not drawn now. try again"),
+        Not_Drawn("1002", "Not drawn now. try again."),
+        Bet_Lock("1003", "the bet lock."),
         ;
 
 
