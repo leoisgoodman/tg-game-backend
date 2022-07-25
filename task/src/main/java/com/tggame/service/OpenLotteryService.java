@@ -77,7 +77,7 @@ public class OpenLotteryService {
     public void lock() throws Exception {
         // 查询最新的可投注数据
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
-                .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Enable)
                 .orderByDesc(OpenRecord::getIssue)
                 .last("limit 1"));
 
