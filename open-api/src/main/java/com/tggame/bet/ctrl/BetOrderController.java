@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.bet.entity.BetCode;
 import com.tggame.bet.entity.BetOrder;
+import com.tggame.bet.entity.BetOrderStatus;
 import com.tggame.bet.entity.BetType;
 import com.tggame.bet.service.BetOrderService;
 import com.tggame.bet.vo.BetOrderPageVO;
@@ -177,6 +178,17 @@ public class BetOrderController {
                 .eq(BetOrder::getTgGroupId, tgGroupId)
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
+        String profitLoss = "无人投注";
+        if (CollectionUtils.isEmpty(betOrderList)) {
+            Double shouldPayAmount = betOrderList.stream().filter(betOrder -> BetOrderStatus.Sent_Money_Done == BetOrderStatus.getEnum(betOrder.getStatus())
+                    || BetOrderStatus.Win == BetOrderStatus.getEnum(betOrder.getStatus()))
+                    .mapToDouble(betOrder -> betOrder.getShouldPayAmount()).sum();
+
+            Double totalBetAmount = betOrderList.stream().filter(betOrder -> BetOrderStatus.Lost == BetOrderStatus.getEnum(betOrder.getStatus()))
+                    .mapToDouble(betOrder -> betOrder.getAmount()).sum();
+            profitLoss = String.valueOf(totalBetAmount - shouldPayAmount);
+        }
+
         String[] resultArray = OpenEnum.Instance.drawn(openRecord.getNum());
         String result = String.join(",", resultArray);
         //todo 投注统计以上数据进行替换，下方提炼成模板模式
@@ -184,7 +196,7 @@ public class BetOrderController {
                 "BTC/USDT: %s\n" +
                 "%s\n" +
                 "盈亏统计：\n" +
-                "无人投注\n" +
+                "%s\n" +
                 "\n" +
                 "第%s期\n" +
                 "开奖时间：%s\n" +
@@ -195,7 +207,7 @@ public class BetOrderController {
                 "单双限红 10 ~ 1000\n" +
                 "号码赔率 9.8\n" +
                 "号码限红 10 ~ 500";
-        detail = String.format(detail, openRecord.getIssue(), openRecord.getNum(), result, nextOpenRecord.getIssue(), nextOpenRecord.getOpenTime());
+        detail = String.format(detail, openRecord.getIssue(), openRecord.getNum(), result, profitLoss, nextOpenRecord.getIssue(), nextOpenRecord.getOpenTime());
         return R.success(detail);
     }
 

@@ -14,6 +14,7 @@ public enum BetOrderStatus implements java.io.Serializable {
     Send_Money("派彩中"),
     Win("赢"),
     Invalid("作废"),
+    Sent_Money_Done("已派彩"),
     ;
 
     public String val;
