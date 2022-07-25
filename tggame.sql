@@ -156,6 +156,7 @@ CREATE TABLE open_record
     lottery_id  varchar(64) comment '彩种id',
     issue       bigint(20) comment '期号',
     num         varchar(16) comment '开奖号码',
+    open_time   varchar(16) comment '开奖时间',
     status      varchar(16) comment '状态：就绪 Ready，可投注 Enable，封盘  Lock，已开奖 Drawn ,作废  Invalid',
     create_time datetime    NULL comment '创建时间',
     update_time datetime    NULL comment '更新时间',
@@ -164,6 +165,7 @@ CREATE TABLE open_record
     INDEX (issue),
     INDEX (status)
 ) comment ='开奖记录';
+
 CREATE TABLE tg_group_bot
 (
     id       varchar(64) NOT NULL comment 'id',

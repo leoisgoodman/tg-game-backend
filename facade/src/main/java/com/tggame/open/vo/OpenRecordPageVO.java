@@ -35,6 +35,11 @@ public class OpenRecordPageVO extends BaseVO implements java.io.Serializable {
     @ApiModelProperty(value = "开奖号码")
     private java.lang.String num;
     /**
+     * 数据库字段:open_time  属性显示:开奖时间
+     */
+    @ApiModelProperty(value = "开奖时间")
+    private java.lang.String openTime;
+    /**
      * 数据库字段:status  属性显示:状态：就绪 Ready，可投注 Enable，封盘  Lock，已开奖 Drawn ,作废  Invalid
      */
     @ApiModelProperty(value = "状态：就绪 Ready，可投注 Enable，封盘  Lock，已开奖 Drawn ,作废  Invalid")
