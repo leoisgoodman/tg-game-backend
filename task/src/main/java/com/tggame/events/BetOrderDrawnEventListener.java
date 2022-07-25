@@ -43,7 +43,7 @@ public class BetOrderDrawnEventListener {
         BetCode bigSmallBetCode = num >= 5 ? BetCode.Big : BetCode.Small;
         BetCode oddEvenBetCode = num % 2 == 0 ? BetCode.Odd : BetCode.Even;
 
-        // 1.更新中间注单
+        // 1.更新中獎注单
         betOrderService.update(new LambdaUpdateWrapper<BetOrder>()
                 .set(BetOrder::getStatus, BetOrderStatus.Win)
                 .set(BetOrder::getUpdateTime, new Date())
@@ -69,7 +69,16 @@ public class BetOrderDrawnEventListener {
                 .eq(BetOrder::getOpenId, openRecord.getId())
                 .eq(BetOrder::getStatus, BetOrderStatus.Bet)
                 .eq(BetOrder::getBetType, BetOrderBetType.Num)
-                .eq(BetOrder::getBetNum, num));
+                .in(BetOrder::getBetNum, num));
+
+        betOrderService.update(new LambdaUpdateWrapper<BetOrder>()
+                .set(BetOrder::getStatus, BetOrderStatus.Lost)
+                .set(BetOrder::getUpdateTime, new Date())
+                .eq(BetOrder::getIssue, openRecord.getIssue())
+                .eq(BetOrder::getOpenId, openRecord.getId())
+                .eq(BetOrder::getStatus, BetOrderStatus.Bet)
+                .eq(BetOrder::getBetType, BetOrderBetType.Num)
+                .notIn(BetOrder::getBetNum, num));
 
         // 2.为用户派彩
         List<BetOrder> betOrderList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
