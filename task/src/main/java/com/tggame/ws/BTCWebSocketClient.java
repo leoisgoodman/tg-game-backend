@@ -4,14 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.tggame.RedisKey;
 import com.tggame.cache.service.RedisServiceSVImpl;
-import com.tggame.events.BetOrderDrawnEvent;
-import com.tggame.events.OpenLotteryEvent;
 import com.tggame.service.OpenLotteryService;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -85,7 +82,7 @@ public class BTCWebSocketClient extends WebSocketClient {
       redisServiceSV.set(btcKey, value, RedisKey.BTC.time);
       log.debug("redis的key:{},值为:{}", btcKey, value);
       OpenLotteryService openLotteryService = applicationContext.getBean(OpenLotteryService.class);
-      openLotteryService.open();
+      openLotteryService.open(value);
     }
   }
 }
