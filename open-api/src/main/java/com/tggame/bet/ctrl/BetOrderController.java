@@ -20,6 +20,7 @@ import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.exceptions.BetOrderException;
 import com.tggame.exceptions.OpenRecordException;
+import com.tggame.open.entity.OpenEnum;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
 import com.tggame.open.service.OpenRecordService;
@@ -176,12 +177,8 @@ public class BetOrderController {
                 .eq(BetOrder::getTgGroupId, tgGroupId)
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
-        String price = openRecord.getNum();
-        int num = Integer.parseInt(price.split("\\.")[1]);
-        String bigSmall = num >= 5 ? "大" : "小";
-        String oddEven = num % 2 == 0 ? "双" : "单";
-        String result = num + "," + bigSmall + "," + oddEven;
-
+        String[] resultArray = OpenEnum.Instance.drawn(openRecord.getNum());
+        String result = String.join(",", resultArray);
         //todo 投注统计以上数据进行替换，下方提炼成模板模式
         String detail = "第%s期\n" +
                 "BTC/USDT: %s\n" +

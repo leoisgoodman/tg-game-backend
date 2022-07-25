@@ -2,6 +2,7 @@ package com.tggame.events;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import com.tggame.open.entity.OpenEnum;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.trend.entity.TrendRecord;
 import com.tggame.trend.service.TrendRecordService;
@@ -29,25 +30,12 @@ public class TrendBuildEventListener {
     public void trendRecordCreate(TrendBuildEvent trendBuildEvent) {
         try {
             OpenRecord openRecord = trendBuildEvent.getOpenRecord();
-
-            //计算位数 如：123.4 -> 1+2+3+4=10 则位数为 0
-            String[] arr = openRecord.getNum().replace(".", "").split("");
-            int sum = 0;
-            for (String s : arr) {
-                sum += Integer.parseInt(s);
-            }
-            String lastNum = String.valueOf(sum);
-            lastNum = lastNum.split("")[lastNum.length() - 1];
-
-            //计算大小单双
-//            String lastNum = openRecord.getNum().split("\\.")[1];
-//            String bigSmall = Integer.parseInt(lastNum) < 5 ? "小" : "大";
-//            String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? "双" : "单";
-//            String data = lastNum + "|" + bigSmall + "|" + oddEven;
+            String[] resultArray = OpenEnum.Instance.drawn(openRecord.getNum());
+            log.info("开奖结果-{}", resultArray);
             trendRecordService.save(TrendRecord.builder()
                     .lotteryId(openRecord.getLotteryId())
                     .issue(openRecord.getIssue())
-                    .data(lastNum)
+                    .data(resultArray[0])
                     .openTime(DateUtil.format(new DateTime(), "HH:mm"))
                     .build());
         } catch (Exception e) {
