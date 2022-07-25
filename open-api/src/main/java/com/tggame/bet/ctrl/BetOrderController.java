@@ -198,7 +198,7 @@ public class BetOrderController {
                 "单双限红 10 ~ 1000\n" +
                 "号码赔率 9.8\n" +
                 "号码限红 10 ~ 500";
-        detail = String.format(detail, openRecord.getIssue(), openRecord.getNum(),result, nextOpenRecord.getIssue());
+        detail = String.format(detail, openRecord.getIssue(), openRecord.getNum(), result, nextOpenRecord.getIssue(), nextOpenRecord.getOpenTime());
         return R.success(detail);
     }
 
