@@ -154,12 +154,16 @@ public class BetOrderController {
     @GetMapping("/count/{tgGroupId}")
     public R countDetail(@PathVariable String tgGroupId) {
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
-                .eq(OpenRecord::getStatus, OpenRecordStatus.Lock)
+                .in(OpenRecord::getStatus, OpenRecordStatus.Lock, OpenRecordStatus.Drawn)
                 .orderByDesc(OpenRecord::getId)
                 .last("limit 1"));
         if (null == openRecord) {
             log.error("查询期号不存在");
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+        if (null == openRecord.getNum()) {
+            log.warn("尚未開獎，稍等再試-{}", openRecord);
+            throw new BetOrderException(BaseException.BaseExceptionEnum.Not_Drawn);
         }
 
 
