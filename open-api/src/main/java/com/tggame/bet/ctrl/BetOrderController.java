@@ -156,7 +156,7 @@ public class BetOrderController {
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Lock)
                 .orderByDesc(OpenRecord::getId)
-                .last("lmit 1"));
+                .last("limit 1"));
         if (null == openRecord) {
             log.error("查询期号不存在");
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
