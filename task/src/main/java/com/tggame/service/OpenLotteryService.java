@@ -62,14 +62,16 @@ public class OpenLotteryService {
         openRecord.setUpdateTime(new Date());
         openRecordService.updateById(openRecord);
 
-        // 3.开启下一期并生成新的一起进行Enable状态
-        OpenRecord nextOpenRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
-                .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
-                .orderByDesc(OpenRecord::getIssue)
-                .last("limit 1"));
-        nextOpenRecord.setStatus(OpenRecordStatus.Enable.name());
-        nextOpenRecord.setUpdateTime(new Date());
-        openRecordService.updateById(nextOpenRecord);
+        // 3.保存下一期
+        String openTimeStr = DateUtil.format(new DateTime(), "HH:mm");
+        long issue = Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(), 2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12));
+        String openTime = issue % 2 == 0 ? openTimeStr : DateUtil.format(DateUtil.offsetMinute(new Date(), 1), "HH:mm");
+        openRecordService.save(OpenRecord.builder()
+                .issue(issue % 2 == 0 ? issue : issue + 1)
+                .openTime(openTime)
+                .status(OpenRecordStatus.Ready.name())
+                .build());
+
 
         // 4.统计走势,派獎等事件發佈
         applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
@@ -88,14 +90,13 @@ public class OpenLotteryService {
         openRecord.setUpdateTime(new Date());
         openRecordService.updateById(openRecord);
 
-        //保存下一期
-        String openTimeStr = DateUtil.format(new DateTime(), "HH:mm");
-        long issue = Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(), 2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12));
-        String openTime = issue % 2 == 0 ? openTimeStr : DateUtil.format(DateUtil.offsetMinute(new Date(), 1), "HH:mm");
-        openRecordService.save(OpenRecord.builder()
-                .issue(issue % 2 == 0 ? issue : issue + 1)
-                .openTime(openTime)
-                .status(OpenRecordStatus.Ready.name())
-                .build());
+        //开启下一期并生成新的一起进行Enable状态
+        OpenRecord nextOpenRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
+                .orderByDesc(OpenRecord::getIssue)
+                .last("limit 1"));
+        nextOpenRecord.setStatus(OpenRecordStatus.Enable.name());
+        nextOpenRecord.setUpdateTime(new Date());
+        openRecordService.updateById(nextOpenRecord);
     }
 }
