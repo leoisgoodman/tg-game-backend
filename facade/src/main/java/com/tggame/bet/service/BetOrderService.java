@@ -15,11 +15,10 @@ public interface BetOrderService extends IService<BetOrder> {
 
     /**
      * 投注
+     *  @param betOrder
      *
-     * @param betOrder
-     * @param betCode
      */
-    void bet(BetOrder betOrder, String betCode);
+    void bet(BetOrder betOrder);
 }
 
 

@@ -36,7 +36,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Locale;
 
 
 /**
@@ -97,16 +96,15 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
      * 5.發佈投注事件
      *
      * @param betOrder 投注記錄
-     * @param betCode  投注編碼
      */
     @Transactional
     @Override
-    public void bet(BetOrder betOrder, String betCode) {
+    public void bet(BetOrder betOrder) {
         OpenRecord openRecord = openRecordDAO.selectOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Enable)
                 .last("limit 1"));
         if (null == openRecord) {
-            log.error("没有可投注期号错误-{}-{}", betOrder, betCode);
+            log.error("没有可投注期号错误-{}", betOrder);
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Bet_Lock);
         }
         //1.查詢個人賬戶餘額信息，並扣除餘額
@@ -144,10 +142,10 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
         GroupBet groupBet = groupBetDAO.selectOne(new LambdaQueryWrapper<GroupBet>()
                 .eq(GroupBet::getGroupId, group.getId())
                 .eq(GroupBet::getGroupLotteryId, groupLottery.getLotteryId())
-                .eq(GroupBet::getCode, betCode.toLowerCase(Locale.ROOT))
+                .eq(GroupBet::getCode, betOrder.getBetCode().toLowerCase())
                 .eq(GroupBet::getStatus, GroupBetStatus.Enable));
         if (null == groupBet) {
-            log.error("投注项不存在错误-{}", betCode);
+            log.error("投注项不存在错误-{}", betOrder.getBetCode().toLowerCase());
             throw new GroupBetException(BaseException.BaseExceptionEnum.Result_Not_Exist);
         }
 
@@ -187,6 +185,7 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
         betOrder.setUserId(user.getId());
         betOrder.setOdds(groupBet.getOdds());
         betOrder.setPayBackPercent(groupBet.getPayBackPercent());
+        betOrder.setBetCode(betOrder.getBetCode().toLowerCase());
 
         betOrder.setIssue(openRecord.getIssue());
         betOrder.setOpenId(openRecord.getId());

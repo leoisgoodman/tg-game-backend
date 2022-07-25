@@ -80,7 +80,7 @@ public class BetOrderController {
         BetOrder newBetOrder = new BetOrder();
         BeanUtils.copyProperties(betOrderSaveVO, newBetOrder);
 
-        betOrderService.bet(newBetOrder, betOrderSaveVO.getBetCode());
+        betOrderService.bet(newBetOrder);
 
         betOrderSaveVO = new BetOrderSaveVO();
         BeanUtils.copyProperties(newBetOrder, betOrderSaveVO);
