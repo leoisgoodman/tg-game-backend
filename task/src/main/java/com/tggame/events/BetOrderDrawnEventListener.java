@@ -8,6 +8,7 @@ import com.tggame.bet.entity.BetOrder;
 import com.tggame.bet.entity.BetOrderBetType;
 import com.tggame.bet.entity.BetOrderStatus;
 import com.tggame.bet.service.BetOrderService;
+import com.tggame.open.entity.OpenEnum;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.user.entity.User;
 import com.tggame.user.service.UserService;
@@ -41,9 +42,10 @@ public class BetOrderDrawnEventListener {
     @EventListener(BetOrderDrawnEvent.class)
     public void betOrderDrawn(BetOrderDrawnEvent betOrderDrawnEvent) {
         OpenRecord openRecord = betOrderDrawnEvent.getOpenRecord();
-        int num = Integer.parseInt(openRecord.getNum().split("\\.")[1]);
-        BetCode bigSmallBetCode = num >= 5 ? BetCode.Big : BetCode.Small;
-        BetCode oddEvenBetCode = num % 2 == 0 ? BetCode.Odd : BetCode.Even;
+        String[] arr = OpenEnum.Instance.drawn(openRecord.getNum());
+        BetCode bigSmallBetCode = Integer.parseInt(arr[0]) >= 5 ? BetCode.Big : BetCode.Small;
+        BetCode oddEvenBetCode = Integer.parseInt(arr[0]) % 2 == 0 ? BetCode.Odd : BetCode.Even;
+        String num = arr[0];
 
         // 1.更新中獎注单
         betOrderService.update(new LambdaUpdateWrapper<BetOrder>()

@@ -3,6 +3,8 @@
  */
 package com.tggame.open.entity;
 
+import com.tggame.bet.entity.BetCode;
+
 /**
  * 开奖结果
  *
@@ -27,8 +29,8 @@ public enum OpenEnum implements java.io.Serializable {
         String lastNum = String.valueOf(sum);
         lastNum = lastNum.split("")[lastNum.length() - 1];
 
-        String bigSmall = Integer.parseInt(lastNum) >= 5 ? "大" : "小";
-        String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? "双" : "单";
+        String bigSmall = Integer.parseInt(lastNum) >= 5 ? BetCode.Big.val : BetCode.Small.val;
+        String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? BetCode.Odd.val : BetCode.Even.val;
 
         return new String[]{lastNum, bigSmall, oddEven};
     }
