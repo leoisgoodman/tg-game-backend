@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tggame.open.dao.OpenRecordDAO;
 import com.tggame.open.dao.mapper.OpenRecordMapper;
 import com.tggame.open.entity.OpenRecord;
-import com.tggame.open.entity.OpenRecordStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,18 @@ import java.util.Date;
 @Service
 public class OpenRecordServiceImpl extends ServiceImpl<OpenRecordMapper, OpenRecord> implements OpenRecordService {
 
-  @Autowired
-  private OpenRecordDAO openRecordDAO;
+    @Autowired
+    private OpenRecordDAO openRecordDAO;
 
+    @Autowired
+    private UidGenerator uidGenerator;
+
+    @Transactional
+    @Override
+    public boolean save(OpenRecord entity) {
+        entity.setId(String.valueOf(uidGenerator.getUID()));
+        entity.setCreateTime(new Date());
+        entity.setUpdateTime(new Date());
+        return super.save(entity);
+    }
 }

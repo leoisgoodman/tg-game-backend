@@ -61,11 +61,8 @@ public class OpenLotteryService {
 
         // 3.开启下一期并生成新的一起进行Enable状态
         openRecordService.save(OpenRecord.builder()
-                .id(String.valueOf(uidGenerator.getUID()))
                 .issue(Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(),2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
                 .status(OpenRecordStatus.Enable.name())
-                .createTime(new Date())
-                .updateTime(new Date())
                 .build());
 
         // 4.统计走势,派獎等事件發佈
