@@ -30,13 +30,15 @@ public class TrendBuildEventListener {
         try {
             OpenRecord openRecord = trendBuildEvent.getOpenRecord();
 
-            //计算大小单双
+            //计算位数 如：123.4 -> 1+2+3+4=10 则位数为 0
             String[] arr = openRecord.getNum().replace(".", "").split("");
             int sum = 0;
             for (String s : arr) {
                 sum += Integer.parseInt(s);
             }
+            String lastNum = String.valueOf(sum / 10).split("\\.")[1];
 
+            //计算大小单双
 //            String lastNum = openRecord.getNum().split("\\.")[1];
 //            String bigSmall = Integer.parseInt(lastNum) < 5 ? "小" : "大";
 //            String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? "双" : "单";
@@ -44,7 +46,7 @@ public class TrendBuildEventListener {
             trendRecordService.save(TrendRecord.builder()
                     .lotteryId(openRecord.getLotteryId())
                     .issue(openRecord.getIssue())
-                    .data(String.valueOf(sum))
+                    .data(lastNum)
                     .openTime(DateUtil.format(new DateTime(), "HH:mm"))
                     .build());
         } catch (Exception e) {
