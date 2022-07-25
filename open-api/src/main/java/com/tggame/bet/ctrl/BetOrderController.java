@@ -179,7 +179,7 @@ public class BetOrderController {
                 .eq(BetOrder::getIssue, openRecord.getIssue()));
 
         String profitLoss = "无人投注";
-        if (CollectionUtils.isEmpty(betOrderList)) {
+        if (CollectionUtils.isNotEmpty(betOrderList)) {
             List<BetOrder> betOrderFilterList = betOrderList.stream().filter(betOrder -> BetOrderStatus.Sent_Money_Done == BetOrderStatus.getEnum(betOrder.getStatus())
                     || BetOrderStatus.Win == BetOrderStatus.getEnum(betOrder.getStatus()))
                     .collect(Collectors.toList());
