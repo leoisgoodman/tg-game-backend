@@ -168,7 +168,7 @@ public class BetOrderController {
         }
 
         OpenRecord nextOpenRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
-                .in(OpenRecord::getStatus, OpenRecordStatus.Ready)
+                .in(OpenRecord::getStatus, OpenRecordStatus.Enable)
                 .orderByDesc(OpenRecord::getId)
                 .last("limit 1"));
 
