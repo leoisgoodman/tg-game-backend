@@ -102,7 +102,8 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
     @Override
     public void bet(BetOrder betOrder, String betCode) {
         OpenRecord openRecord = openRecordDAO.selectOne(new LambdaQueryWrapper<OpenRecord>()
-                .eq(OpenRecord::getStatus, OpenRecordStatus.Enable));
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Enable)
+                .last("limit 1"));
         if (null == openRecord) {
             log.error("没有可投注期号错误-{}-{}", betOrder, betCode);
             throw new OpenRecordException(BaseException.BaseExceptionEnum.Result_Not_Exist);
