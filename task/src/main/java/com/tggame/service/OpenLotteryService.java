@@ -68,7 +68,7 @@ public class OpenLotteryService {
                 .updateTime(new Date())
                 .build());
 
-        // 4.统计走势
+        // 4.统计走势,派獎等事件發佈
         applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
         applicationEventPublisher.publishEvent(new BetOrderDrawnEvent(this, openRecord));
     }
