@@ -101,7 +101,8 @@ public class TrendRecordController {
     @GetMapping("/count/{groupId}")
     public R count(@PathVariable java.lang.String groupId) {
         List<TrendRecord> trendRecordList = trendRecordService.list(new LambdaQueryWrapper<TrendRecord>()
-                .ge(TrendRecord::getCreateTime, DateUtil.offset(new Date(), DateField.HOUR, -1)));
+                .ge(TrendRecord::getCreateTime, DateUtil.offset(new Date(), DateField.HOUR, -1))
+                .orderByDesc(TrendRecord::getId));
         if (CollectionUtils.isEmpty(trendRecordList)) {
             return null;
         }
