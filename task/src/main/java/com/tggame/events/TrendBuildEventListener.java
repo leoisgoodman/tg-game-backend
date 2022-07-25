@@ -36,7 +36,8 @@ public class TrendBuildEventListener {
             for (String s : arr) {
                 sum += Integer.parseInt(s);
             }
-            String lastNum = String.valueOf(sum / 10).split("\\.")[1];
+            String lastNum = String.valueOf(sum);
+            lastNum = lastNum.split("")[lastNum.length() - 1];
 
             //计算大小单双
 //            String lastNum = openRecord.getNum().split("\\.")[1];
