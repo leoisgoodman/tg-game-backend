@@ -87,6 +87,9 @@ public class BetOrderDrawnEventListener {
                 .eq(BetOrder::getOpenId, openRecord.getId())
                 .eq(BetOrder::getIssue, openRecord.getIssue())
                 .eq(BetOrder::getStatus, BetOrderStatus.Win));
+        if (CollectionUtils.isEmpty(betOrderList)) {
+            return;
+        }
 
         List<User> userList = userService.list(new LambdaQueryWrapper<User>()
                 .in(User::getId, betOrderList.stream().map(betOrder -> betOrder.getUserId())));
