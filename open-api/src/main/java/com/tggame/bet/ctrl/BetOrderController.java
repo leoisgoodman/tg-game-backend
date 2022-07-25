@@ -180,13 +180,23 @@ public class BetOrderController {
 
         String profitLoss = "无人投注";
         if (CollectionUtils.isEmpty(betOrderList)) {
-            Double shouldPayAmount = betOrderList.stream().filter(betOrder -> BetOrderStatus.Sent_Money_Done == BetOrderStatus.getEnum(betOrder.getStatus())
+            List<BetOrder> betOrderFilterList = betOrderList.stream().filter(betOrder -> BetOrderStatus.Sent_Money_Done == BetOrderStatus.getEnum(betOrder.getStatus())
                     || BetOrderStatus.Win == BetOrderStatus.getEnum(betOrder.getStatus()))
-                    .mapToDouble(betOrder -> betOrder.getShouldPayAmount()).sum();
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isNotEmpty(betOrderFilterList)) {
+                List<User> userList = userService.list(new LambdaQueryWrapper<User>()
+                        .select(User::getId, User::getTgUsername)
+                        .in(User::getId, betOrderFilterList.stream().map(betOrder -> betOrder.getUserId()).collect(Collectors.toSet())));
+                profitLoss = "";
+                for (BetOrder betOrder : betOrderFilterList) {
+                    for (User user : userList) {
+                        if (user.getId().equals(betOrder.getUserId())) {
+                            profitLoss += "@" + user.getTgUsername() + " 盈 " + betOrder.getShouldPayAmount() + " \n";
+                        }
+                    }
+                }
+            }
 
-            Double totalBetAmount = betOrderList.stream().filter(betOrder -> BetOrderStatus.Lost == BetOrderStatus.getEnum(betOrder.getStatus()))
-                    .mapToDouble(betOrder -> betOrder.getAmount()).sum();
-            profitLoss = String.valueOf(totalBetAmount - shouldPayAmount);
         }
 
         String[] resultArray = OpenEnum.Instance.drawn(openRecord.getNum());
