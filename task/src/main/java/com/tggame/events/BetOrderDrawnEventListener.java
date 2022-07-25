@@ -2,12 +2,14 @@ package com.tggame.events;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.tggame.bet.entity.BetCode;
 import com.tggame.bet.entity.BetOrder;
 import com.tggame.bet.entity.BetOrderBetType;
 import com.tggame.bet.entity.BetOrderStatus;
 import com.tggame.bet.service.BetOrderService;
 import com.tggame.open.entity.OpenRecord;
+import com.tggame.user.entity.User;
 import com.tggame.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,26 @@ public class BetOrderDrawnEventListener {
                 .eq(BetOrder::getOpenId, openRecord.getId())
                 .eq(BetOrder::getIssue, openRecord.getIssue())
                 .eq(BetOrder::getStatus, BetOrderStatus.Win));
+
+        List<User> userList = userService.list(new LambdaQueryWrapper<User>()
+                .in(User::getId, betOrderList.stream().map(betOrder -> betOrder.getUserId())));
+
+        if (CollectionUtils.isEmpty(userList)) {
+            return;
+        }
+
+        //批量派彩給用戶
+        for (BetOrder betOrder : betOrderList) {
+            for (User user : userList) {
+                if (user.getId().equals(betOrder.getUserId())) {
+                    user.setUsdtBalance(user.getUsdtBalance() + betOrder.getShouldPayAmount());
+                    user.setUpdateTime(new Date());
+                }
+            }
+        }
+
+        log.info("批量派彩操作-{}", userList);
+        userService.updateBatchById(userList);
     }
 
 }
