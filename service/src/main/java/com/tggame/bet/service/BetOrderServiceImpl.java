@@ -192,7 +192,8 @@ public class BetOrderServiceImpl extends ServiceImpl<BetOrderMapper, BetOrder> i
         betOrder.setOpenId(openRecord.getId());
         Double shouldPayAmount = Double.parseDouble(new DecimalFormat("######0.00").format(betOrder.getAmount() * betOrder.getOdds() * betOrder.getPayBackPercent() / 100));
         betOrder.setShouldPayAmount(shouldPayAmount);
-        betOrder.setWinAmount(betOrder.getAmount() * betOrder.getOdds());
+        Double winAmount = Double.parseDouble(new DecimalFormat("######0.00").format(betOrder.getAmount() * betOrder.getOdds()));
+        betOrder.setWinAmount(winAmount);
 
         this.save(betOrder);
 
