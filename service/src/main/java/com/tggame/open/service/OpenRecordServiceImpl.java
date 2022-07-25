@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-
 /**
  * 开奖记录
  *
@@ -26,22 +25,7 @@ import java.util.Date;
 @Service
 public class OpenRecordServiceImpl extends ServiceImpl<OpenRecordMapper, OpenRecord> implements OpenRecordService {
 
-    @Autowired
-    private OpenRecordDAO openRecordDAO;
-
-    @Autowired
-    private UidGenerator uidGenerator;
-
-    @Transactional
-    @Override
-    public boolean save(OpenRecord entity) {
-        entity.setId(String.valueOf(uidGenerator.getUID()));
-        entity.setStatus(OpenRecordStatus.Ready.name());
-        entity.setCreateTime(new Date());
-        entity.setUpdateTime(new Date());
-        return super.save(entity);
-    }
+  @Autowired
+  private OpenRecordDAO openRecordDAO;
 
 }
-
-
