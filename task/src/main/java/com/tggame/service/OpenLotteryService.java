@@ -52,7 +52,7 @@ public class OpenLotteryService {
 
         log.info("获取到的BTC的价格为:{}", num);
 
-        // 2.更新开奖记录  状态是为封盘的
+        // 2.更新开奖记录  状态是为开奖
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Lock)
                 .orderByDesc(OpenRecord::getIssue)
