@@ -79,7 +79,7 @@ public class OpenLotteryService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void lock() throws Exception {
+    public void lock() {
         // 查询最新的可投注数据
         OpenRecord openRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
                 .eq(OpenRecord::getStatus, OpenRecordStatus.Enable)
