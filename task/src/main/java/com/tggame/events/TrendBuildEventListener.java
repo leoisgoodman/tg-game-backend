@@ -39,7 +39,7 @@ public class TrendBuildEventListener {
                     .lotteryId(openRecord.getLotteryId())
                     .issue(openRecord.getIssue())
                     .data(data)
-                    .openTime(DateUtil.format(new DateTime(), "hh:MM"))
+                    .openTime(DateUtil.format(new DateTime(), "HH:mm"))
                     .build());
         } catch (Exception e) {
             log.error("-{}", e.getLocalizedMessage(), e);
