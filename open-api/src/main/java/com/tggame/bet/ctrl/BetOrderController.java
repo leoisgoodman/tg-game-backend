@@ -141,7 +141,7 @@ public class BetOrderController {
             return R.success(detail);
         }
 
-        return R.success("稍后再试");
+        return R.success("您暂无投注");
     }
 
 
