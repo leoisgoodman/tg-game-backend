@@ -57,10 +57,13 @@ public class OpenLotteryService {
         openRecordService.updateById(openRecord);
 
         // 3.开启下一期并生成新的一起进行Enable状态
-        openRecordService.save(OpenRecord.builder()
-                .issue(Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(), 2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
-                .status(OpenRecordStatus.Enable.name())
-                .build());
+        OpenRecord nextOpenRecord = openRecordService.getOne(new LambdaQueryWrapper<OpenRecord>()
+                .eq(OpenRecord::getStatus, OpenRecordStatus.Ready)
+                .orderByDesc(OpenRecord::getIssue)
+                .last("limit 1"));
+        nextOpenRecord.setStatus(OpenRecordStatus.Enable.name());
+        nextOpenRecord.setUpdateTime(new Date());
+        openRecordService.updateById(nextOpenRecord);
 
         // 4.统计走势,派獎等事件發佈
         applicationEventPublisher.publishEvent(new TrendBuildEvent(this, openRecord));
@@ -78,5 +81,11 @@ public class OpenLotteryService {
         openRecord.setStatus(OpenRecordStatus.Lock.name());
         openRecord.setUpdateTime(new Date());
         openRecordService.updateById(openRecord);
+
+        //保存下一期
+        openRecordService.save(OpenRecord.builder()
+                .issue(Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(), 2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
+                .status(OpenRecordStatus.Ready.name())
+                .build());
     }
 }
