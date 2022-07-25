@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import com.baidu.fsg.uid.UidGenerator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tggame.RedisKey;
 import com.tggame.cache.service.RedisServiceSVImpl;
@@ -31,8 +30,6 @@ public class OpenLotteryService {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
-    private UidGenerator uidGenerator;
 
     @Autowired
     private RedisServiceSVImpl redisServiceSV;
@@ -61,7 +58,7 @@ public class OpenLotteryService {
 
         // 3.开启下一期并生成新的一起进行Enable状态
         openRecordService.save(OpenRecord.builder()
-                .issue(Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(),2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
+                .issue(Long.parseLong(DateUtil.format(DateUtil.offsetMinute(new Date(), 2), DatePattern.PURE_DATETIME_PATTERN).substring(0, 12)))
                 .status(OpenRecordStatus.Enable.name())
                 .build());
 
