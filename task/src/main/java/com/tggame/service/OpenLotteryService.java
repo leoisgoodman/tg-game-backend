@@ -48,6 +48,7 @@ public class OpenLotteryService {
         if (StringUtils.isBlank(num)) {
             return;
         }
+        redisServiceSV.del(btcKey);
 
         log.info("获取到的BTC的价格为:{}", num);
 
