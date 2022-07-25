@@ -13,6 +13,7 @@ import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.entity.OpenRecordStatus;
 import com.tggame.open.service.OpenRecordService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class OpenLotteryService {
 
         String btcKey = RedisKey.genBTCKey(time);
         String num = (String) redisServiceSV.get(btcKey);
+        if (StringUtils.isBlank(num)) {
+            return;
+        }
+
         log.info("获取到的BTC的价格为:{}", num);
 
         // 2.更新开奖记录  状态是为封盘的

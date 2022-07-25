@@ -19,7 +19,7 @@ public class OpenLotteryJob {
     /**
      * 每2分钟第3秒查询一次奖源，进行开奖
      */
-    @Scheduled(cron = "3 0/2 * * * ?")
+    @Scheduled(cron = "0/3 * * * * ?")
     public void execute() {
         log.info("开始开奖");
         openLotteryService.open();
