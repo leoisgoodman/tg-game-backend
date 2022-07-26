@@ -195,6 +195,8 @@ public class BetOrderController {
                         }
                     }
                 }
+            } else {
+                profitLoss = "无人中奖";
             }
 
         }
