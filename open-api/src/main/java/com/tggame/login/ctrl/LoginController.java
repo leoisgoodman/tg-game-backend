@@ -7,7 +7,6 @@ import com.auth0.jwt.JWTCreator;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.tggame.cache.entity.ConstantsEnum;
 import com.tggame.cache.entity.RedisKey;
-import com.tggame.cache.service.RedisServiceSVImpl;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.core.tools.JwtToken;
@@ -44,16 +43,13 @@ public class LoginController {
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private RedisServiceSVImpl redisServiceSV;
-
 
     /**
      * 登录会话
      *
      * @return BetVO
      */
-    @ApiOperation(value = "创建Bet", notes = "创建Bet")
+    @ApiOperation(value = "登录会话", notes = "登录会话")
     @GetMapping("/token/{tgGroupId}/{tgUsername}")
     public R token(@PathVariable String tgGroupId, @PathVariable String tgUsername) {
         Group group = groupService.getOne(new LambdaQueryWrapper<Group>()
