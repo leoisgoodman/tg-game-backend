@@ -101,7 +101,7 @@ public class BetOrderDrawnEventListener {
             return;
         }
         //玩家派彩总额
-        Double winTotal = CollectionUtils.isNotEmpty(betOrderList) ? betOrderList.stream().mapToDouble(BetOrder::getAmount).sum() : 0;
+        Double winTotal = CollectionUtils.isNotEmpty(betOrderList) ? betOrderList.stream().mapToDouble(BetOrder::getShouldPayAmount).sum() : 0;
         log.info("玩家需要派彩总额-{}", winTotal);
 
         if (CollectionUtils.isNotEmpty(betOrderList)) {
