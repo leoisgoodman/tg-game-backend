@@ -82,6 +82,7 @@ dependencies {
     implementation 'com.github.pagehelper:pagehelper:5.1.11'
 
     implementation 'cn.hutool:hutool-all:5.1.5'
+    implementation 'com.auth0:java-jwt:3.2.0'
 
     implementation project(path: ':core')
     implementation project(path: ':common')

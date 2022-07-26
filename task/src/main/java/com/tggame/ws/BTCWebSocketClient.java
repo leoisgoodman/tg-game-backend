@@ -2,7 +2,7 @@ package com.tggame.ws;
 
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.tggame.RedisKey;
+import com.tggame.cache.entity.RedisKey;
 import com.tggame.cache.service.RedisServiceSVImpl;
 import com.tggame.service.OpenLotteryService;
 import lombok.extern.slf4j.Slf4j;
