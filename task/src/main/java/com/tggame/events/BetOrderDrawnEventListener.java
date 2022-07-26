@@ -8,9 +8,13 @@ import com.tggame.bet.entity.BetOrder;
 import com.tggame.bet.entity.BetOrderBetType;
 import com.tggame.bet.entity.BetOrderStatus;
 import com.tggame.bet.service.BetOrderService;
+import com.tggame.core.base.BaseException;
+import com.tggame.exceptions.UserException;
 import com.tggame.open.entity.OpenEnum;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.user.entity.User;
+import com.tggame.user.entity.UserStatus;
+import com.tggame.user.entity.UserType;
 import com.tggame.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class BetOrderDrawnEventListener {
 
     @Autowired
     private BetOrderService betOrderService;
+
     @Autowired
     private UserService userService;
 
@@ -37,6 +43,7 @@ public class BetOrderDrawnEventListener {
      * 开奖业务
      * 1.更新中间注单
      * 2.为用户派彩
+     * 3.庄家的收入变动
      */
     @Async
     @EventListener(BetOrderDrawnEvent.class)
@@ -92,6 +99,8 @@ public class BetOrderDrawnEventListener {
         if (CollectionUtils.isEmpty(betOrderList)) {
             return;
         }
+        //玩家派彩总额
+        Double winTotal = betOrderList.stream().mapToDouble(BetOrder::getAmount).sum();
 
         List<User> userList = userService.list(new LambdaQueryWrapper<User>()
                 .in(User::getId, betOrderList.stream().map(betOrder -> betOrder.getUserId())));
@@ -111,6 +120,42 @@ public class BetOrderDrawnEventListener {
         }
 
         log.info("批量派彩操作-{}", userList);
+        userService.updateBatchById(userList);
+
+        //3.庄家的收入变动
+        this.bankerAmount(openRecord, winTotal);
+    }
+
+    /**
+     * 庄家扣款和上分
+     */
+    private void bankerAmount(OpenRecord openRecord, Double winTotal) {
+        List<BetOrder> betOrderLostList = betOrderService.list(new LambdaQueryWrapper<BetOrder>()
+                .select(BetOrder::getBetId, BetOrder::getAmount)
+                .eq(BetOrder::getOpenId, openRecord.getId())
+                .eq(BetOrder::getIssue, openRecord.getIssue())
+                .eq(BetOrder::getStatus, BetOrderStatus.Lost));
+        if (CollectionUtils.isEmpty(betOrderLostList)) {
+            return;
+        }
+
+        Double incomeTotal = betOrderLostList.stream().mapToDouble(BetOrder::getAmount).sum();
+
+        //最终庄家盈利
+        Double totalAmount = incomeTotal - winTotal;
+
+        List<User> userList = userService.list(new LambdaQueryWrapper<User>()
+                .select(User::getId, User::getUsdtBalance, User::getPercent)
+                .eq(User::getStatus, UserStatus.Enable)
+                .eq(User::getType, UserType.Banker));
+        if (null == userList) {
+            throw new UserException(BaseException.BaseExceptionEnum.Result_Not_Exist);
+        }
+
+        for (User user : userList) {
+            user.setUsdtBalance(Double.parseDouble(new DecimalFormat("######0.00").format(user.getUsdtBalance() + user.getPercent() / 100 * totalAmount)));
+        }
+
         userService.updateBatchById(userList);
     }
 
