@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class DemoJob {
 
 
-    @Scheduled(cron = "* * * * * ?")
+//    @Scheduled(cron = "* * * * * ?")
     public void execute() {
         log.info("===========>调度开始执行");
     }
