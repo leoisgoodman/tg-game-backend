@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单监听器
@@ -103,7 +104,9 @@ public class BetOrderDrawnEventListener {
         Double winTotal = betOrderList.stream().mapToDouble(BetOrder::getAmount).sum();
 
         List<User> userList = userService.list(new LambdaQueryWrapper<User>()
-                .in(User::getId, betOrderList.stream().map(betOrder -> betOrder.getUserId())));
+                .in(User::getId, betOrderList.stream()
+                        .map(betOrder -> betOrder.getUserId())
+                        .collect(Collectors.toSet())));
 
         if (CollectionUtils.isEmpty(userList)) {
             return;
