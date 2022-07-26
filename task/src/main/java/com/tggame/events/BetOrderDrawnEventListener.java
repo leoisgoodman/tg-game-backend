@@ -143,6 +143,11 @@ public class BetOrderDrawnEventListener {
         //最终庄家盈利
         Double totalAmount = incomeTotal - winTotal;
 
+        if (0 == totalAmount) {
+            log.warn("盈亏互抵，暂不用调整庄家余额-{}-{}", incomeTotal, -winTotal);
+            return;
+        }
+
         List<User> userList = userService.list(new LambdaQueryWrapper<User>()
                 .select(User::getId, User::getUsdtBalance, User::getPercent)
                 .eq(User::getStatus, UserStatus.Enable)
