@@ -45,9 +45,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         entity.setBetLostMoney(0L);
         entity.setBetTotalMoney(0L);
         entity.setBetWinMoney(0L);
-        entity.setUsdtBalance(0D);
+        entity.setUsdtBalance(10000.00D);
         entity.setPercent(0);
-        entity.setType(UserType.Player.name());
+        entity.setType(UserType.Demo.name());
         entity.setCreateTime(new Date());
         entity.setUpdateTime(new Date());
         return super.save(entity);
