@@ -30,7 +30,7 @@ public enum OpenEnum implements java.io.Serializable {
         lastNum = lastNum.split("")[lastNum.length() - 1];
 
         String bigSmall = Integer.parseInt(lastNum) >= 5 ? BetCode.Big.val : BetCode.Small.val;
-        String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? BetCode.Odd.val : BetCode.Even.val;
+        String oddEven = Integer.parseInt(lastNum) % 2 == 0 ? BetCode.Even.val : BetCode.Odd.val;
 
         return new String[]{lastNum, bigSmall, oddEven};
     }
