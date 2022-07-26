@@ -101,29 +101,28 @@ public class BetOrderDrawnEventListener {
             return;
         }
         //玩家派彩总额
-        Double winTotal = betOrderList.stream().mapToDouble(BetOrder::getAmount).sum();
+        Double winTotal = CollectionUtils.isNotEmpty(betOrderList) ? betOrderList.stream().mapToDouble(BetOrder::getAmount).sum() : 0;
+        log.info("玩家需要派彩总额-{}", winTotal);
 
-        List<User> userList = userService.list(new LambdaQueryWrapper<User>()
-                .in(User::getId, betOrderList.stream()
-                        .map(betOrder -> betOrder.getUserId())
-                        .collect(Collectors.toSet())));
+        if (CollectionUtils.isNotEmpty(betOrderList)) {
 
-        if (CollectionUtils.isEmpty(userList)) {
-            return;
-        }
-
-        //批量派彩給用戶
-        for (BetOrder betOrder : betOrderList) {
-            for (User user : userList) {
-                if (user.getId().equals(betOrder.getUserId())) {
-                    user.setUsdtBalance(user.getUsdtBalance() + betOrder.getShouldPayAmount());
-                    user.setUpdateTime(new Date());
+            List<User> userList = userService.list(new LambdaQueryWrapper<User>()
+                    .in(User::getId, betOrderList.stream()
+                            .map(betOrder -> betOrder.getUserId())
+                            .collect(Collectors.toSet())));
+            //批量派彩給用戶
+            for (BetOrder betOrder : betOrderList) {
+                for (User user : userList) {
+                    if (user.getId().equals(betOrder.getUserId())) {
+                        user.setUsdtBalance(user.getUsdtBalance() + betOrder.getShouldPayAmount());
+                        user.setUpdateTime(new Date());
+                    }
                 }
             }
-        }
 
-        log.info("批量派彩操作-{}", userList);
-        userService.updateBatchById(userList);
+            log.info("批量派彩操作-{}", userList);
+            userService.updateBatchById(userList);
+        }
 
         //3.庄家的收入变动
         this.bankerAmount(openRecord, winTotal);
@@ -138,11 +137,8 @@ public class BetOrderDrawnEventListener {
                 .eq(BetOrder::getOpenId, openRecord.getId())
                 .eq(BetOrder::getIssue, openRecord.getIssue())
                 .eq(BetOrder::getStatus, BetOrderStatus.Lost));
-        if (CollectionUtils.isEmpty(betOrderLostList)) {
-            return;
-        }
 
-        Double incomeTotal = betOrderLostList.stream().mapToDouble(BetOrder::getAmount).sum();
+        Double incomeTotal = CollectionUtils.isNotEmpty(betOrderLostList) ? betOrderLostList.stream().mapToDouble(BetOrder::getAmount).sum() : 0;
 
         //最终庄家盈利
         Double totalAmount = incomeTotal - winTotal;
@@ -151,12 +147,13 @@ public class BetOrderDrawnEventListener {
                 .select(User::getId, User::getUsdtBalance, User::getPercent)
                 .eq(User::getStatus, UserStatus.Enable)
                 .eq(User::getType, UserType.Banker));
-        if (null == userList) {
+        if (CollectionUtils.isEmpty(userList)) {
             throw new UserException(BaseException.BaseExceptionEnum.Result_Not_Exist);
         }
 
         for (User user : userList) {
-            user.setUsdtBalance(Double.parseDouble(new DecimalFormat("######0.00").format(user.getUsdtBalance() + user.getPercent() / 100 * totalAmount)));
+            String usdtBalance = new DecimalFormat("######0.00").format(user.getUsdtBalance() + user.getPercent() / 100 * totalAmount);
+            user.setUsdtBalance(Double.parseDouble(usdtBalance));
         }
 
         userService.updateBatchById(userList);
