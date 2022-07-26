@@ -41,51 +41,6 @@ public class TrendRecordController {
 
 
     /**
-     * 创建 走势记录
-     *
-     * @return R
-     */
-    @ApiOperation(value = "创建TrendRecord", notes = "创建TrendRecord")
-    @PostMapping("/build")
-    public TrendRecordSaveVO build(@ApiParam(name = "创建TrendRecord", value = "传入json格式", required = true)
-                                   @RequestBody TrendRecordSaveVO trendRecordSaveVO) {
-        if (StringUtils.isBlank(trendRecordSaveVO.getId())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(trendRecordSaveVO.getLotteryId())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(trendRecordSaveVO.getData())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-
-        int count = trendRecordService.count(new LambdaQueryWrapper<TrendRecord>()
-                .eq(TrendRecord::getId, trendRecordSaveVO.getId())
-                .eq(TrendRecord::getLotteryId, trendRecordSaveVO.getLotteryId())
-                .eq(TrendRecord::getIssue, trendRecordSaveVO.getIssue())
-                .eq(TrendRecord::getData, trendRecordSaveVO.getData())
-                .eq(TrendRecord::getOpenTime, trendRecordSaveVO.getOpenTime())
-                .eq(TrendRecord::getCreateTime, trendRecordSaveVO.getCreateTime())
-        );
-        if (count > 0) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Exists);
-        }
-
-        TrendRecord newTrendRecord = new TrendRecord();
-        BeanUtils.copyProperties(trendRecordSaveVO, newTrendRecord);
-
-        trendRecordService.save(newTrendRecord);
-
-        trendRecordSaveVO = new TrendRecordSaveVO();
-        BeanUtils.copyProperties(newTrendRecord, trendRecordSaveVO);
-        log.debug(JSON.toJSONString(trendRecordSaveVO));
-        return trendRecordSaveVO;
-    }
-
-
-    /**
      * 查询走势记录信息集合
      *
      * @return 分页对象
@@ -112,7 +67,7 @@ public class TrendRecordController {
         }
         int total = trendRecordService.count(queryWrapper);
         if (total > 0) {
-            queryWrapper.lambda().orderByDesc(TrendRecord::getId);
+            queryWrapper.lambda().orderByDesc(TrendRecord::getCreateTime);
 
             IPage<TrendRecord> trendRecordPage = trendRecordService.page(page, queryWrapper);
             List<TrendRecordPageVO> trendRecordPageVOList = JSON.parseArray(JSON.toJSONString(trendRecordPage.getRecords()), TrendRecordPageVO.class);
@@ -126,48 +81,6 @@ public class TrendRecordController {
             return iPage;
         }
         return new Page<>();
-    }
-
-
-    /**
-     * 修改 走势记录
-     *
-     * @return R
-     */
-    @ApiOperation(value = "修改TrendRecord", notes = "修改TrendRecord")
-    @PutMapping("/modify")
-    public boolean modify(@ApiParam(name = "修改TrendRecord", value = "传入json格式", required = true)
-                          @RequestBody TrendRecordVO trendRecordVO) {
-        if (StringUtils.isBlank(trendRecordVO.getId())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Ilegal_Param);
-        }
-        TrendRecord newTrendRecord = new TrendRecord();
-        BeanUtils.copyProperties(trendRecordVO, newTrendRecord);
-        boolean isUpdated = trendRecordService.update(newTrendRecord, new LambdaQueryWrapper<TrendRecord>()
-                .eq(TrendRecord::getId, trendRecordVO.getId()));
-        return isUpdated;
-    }
-
-
-    /**
-     * 删除 走势记录
-     *
-     * @return R
-     */
-    @ApiOperation(value = "删除TrendRecord", notes = "删除TrendRecord")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "id", paramType = "query")
-    })
-    @DeleteMapping("/delete")
-    public R delete(@ApiIgnore TrendRecordVO trendRecordVO) {
-        if (StringUtils.isBlank(trendRecordVO.getId())) {
-            throw new TrendRecordException(BaseException.BaseExceptionEnum.Ilegal_Param);
-        }
-        TrendRecord newTrendRecord = new TrendRecord();
-        BeanUtils.copyProperties(trendRecordVO, newTrendRecord);
-        trendRecordService.remove(new LambdaQueryWrapper<TrendRecord>()
-                .eq(TrendRecord::getId, trendRecordVO.getId()));
-        return R.success("删除成功");
     }
 
 }
