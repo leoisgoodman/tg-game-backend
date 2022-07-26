@@ -51,7 +51,7 @@ public class BetOrderDrawnEventListener {
         OpenRecord openRecord = betOrderDrawnEvent.getOpenRecord();
         String[] arr = OpenEnum.Instance.drawn(openRecord.getNum());
         BetCode bigSmallBetCode = Integer.parseInt(arr[0]) >= 5 ? BetCode.Big : BetCode.Small;
-        BetCode oddEvenBetCode = Integer.parseInt(arr[0]) % 2 == 0 ? BetCode.Odd : BetCode.Even;
+        BetCode oddEvenBetCode = Integer.parseInt(arr[0]) % 2 == 0 ? BetCode.Even : BetCode.Odd;
         String num = arr[0];
 
         // 1.更新中獎注单
