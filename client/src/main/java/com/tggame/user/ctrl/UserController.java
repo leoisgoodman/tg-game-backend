@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.core.tools.HttpHeaders;
 import com.tggame.exceptions.UserException;
 import com.tggame.user.entity.User;
 import com.tggame.user.service.UserService;
@@ -132,16 +133,26 @@ public class UserController {
 
 
     /**
-     * 根据条件tgUserId查询群成员一个详情信息
+     * 根據用戶的id 查詢用戶詳情
      *
-     * @param tgUserId tg用户id，来自tg
+     * @param userId 用戶id
      * @return UserVO
      */
-    @ApiOperation(value = "创建User", notes = "创建User")
-    @GetMapping("/load/tgUserId/{tgUserId}")
-    public UserVO loadByTgUserId(@PathVariable java.lang.String tgUserId) {
+    @ApiOperation(value = "查询群成员", notes = "根據用戶的id 查詢用戶詳情")
+    @GetMapping("/load")
+    public UserVO loadUserByUserId(@RequestAttribute(HttpHeaders.groupId) String groupId, @RequestAttribute(HttpHeaders.userId) String userId) {
+        if (StringUtils.isBlank(groupId)) {
+            log.error("參數為空错误");
+            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
+        }
+        if (StringUtils.isBlank(userId)) {
+            log.error("參數為空错误");
+            throw new UserException(BaseException.BaseExceptionEnum.Empty_Param);
+        }
+
         User user = userService.getOne(new LambdaQueryWrapper<User>()
-                .eq(User::getTgUserId, tgUserId));
+                .eq(User::getGroupId, groupId)
+                .eq(User::getId, userId));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         log.debug(JSON.toJSONString(userVO));
@@ -154,7 +165,7 @@ public class UserController {
      * @param tgUsername tg下用户名
      * @return UserVO
      */
-    @ApiOperation(value = "创建User", notes = "创建User")
+    @ApiOperation(value = "查询群成员", notes = "查询群成员")
     @GetMapping("/load/tgUsername/{tgUsername}")
     public UserVO loadByTgUsername(@PathVariable java.lang.String tgUsername) {
         User user = userService.getOne(new LambdaQueryWrapper<User>()
@@ -171,7 +182,7 @@ public class UserController {
      * @param username 本系统生成的用户名，默认和tg保持一致
      * @return UserVO
      */
-    @ApiOperation(value = "创建User", notes = "创建User")
+    @ApiOperation(value = "查询群成员", notes = "查询群成员")
     @GetMapping("/load/username/{username}")
     public UserVO loadByUsername(@PathVariable java.lang.String username) {
         User user = userService.getOne(new LambdaQueryWrapper<User>()
