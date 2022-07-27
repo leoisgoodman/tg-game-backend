@@ -3,9 +3,9 @@ package com.tggame.cache.entity;
 public enum RedisKey {
     BTC(300),
     /**
-     * 用户会话市场 30分钟
+     * 用户会话市场 5分钟
      */
-    User_Token(30),
+    User_Token(5),
     ;
 
     private static final String preFix = "tggame";
