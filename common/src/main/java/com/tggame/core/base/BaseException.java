@@ -49,6 +49,7 @@ public class BaseException extends RuntimeException implements Serializable {
         Empty_Param("9004", "Parameter is empty"),
         Exists("9005", "There is already exists"),
         Result_Not_Exist("9006", "The query result does not exist"),
+        Session_Error("9007","会话过期,请重新登录"),
 
         //-----------------上传文件异常定义[9500~9599]--------------------------
         Build_Exist("9500", "build exist"),
@@ -59,6 +60,8 @@ public class BaseException extends RuntimeException implements Serializable {
         Phone_Error("1001", "Phone format msg."),
         Not_Drawn("1002", "Not drawn now. try again."),
         Bet_Lock("1003", "the bet lock."),
+
+
         ;
 
 

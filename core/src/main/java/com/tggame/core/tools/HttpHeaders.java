@@ -14,7 +14,7 @@ public class HttpHeaders {
     /**
      * 账号
      */
-    public static final String userName = "username";
+    public static final String username = "username";
     /**
      * tg账号
      */

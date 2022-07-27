@@ -70,7 +70,7 @@ public class LoginController {
 
         JWTCreator.Builder builder = JwtToken.create();
         builder.withClaim(HttpHeaders.userId, user.getId())
-                .withClaim(HttpHeaders.userName, user.getUsername())
+                .withClaim(HttpHeaders.username, user.getUsername())
                 .withClaim(HttpHeaders.tgUsername, user.getTgUsername())
                 .withClaim(HttpHeaders.groupId, tgGroupId)
                 .withClaim(HttpHeaders.type, user.getType());
