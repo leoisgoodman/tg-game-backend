@@ -9,6 +9,7 @@ import com.tggame.cache.entity.ConstantsEnum;
 import com.tggame.cache.entity.RedisKey;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.core.tools.HttpHeaders;
 import com.tggame.core.tools.JwtToken;
 import com.tggame.exceptions.GroupException;
 import com.tggame.exceptions.UserException;
@@ -68,9 +69,12 @@ public class LoginController {
         }
 
         JWTCreator.Builder builder = JwtToken.create();
-        builder.withClaim("id", user.getId())
-                .withClaim("username", user.getUsername())
-                .withClaim("tgUsername", user.getTgUsername());
+        builder.withClaim(HttpHeaders.userId, user.getId())
+                .withClaim(HttpHeaders.userName, user.getUsername())
+                .withClaim(HttpHeaders.tgUsername, user.getTgUsername())
+                .withClaim(HttpHeaders.groupId, tgGroupId)
+                .withClaim(HttpHeaders.type, user.getType());
+
         String secret = ConstantsEnum.Jwt_Secret.value;
         String token = JwtToken.createToken(builder, secret, RedisKey.User_Token.time);
         return R.success(token);
