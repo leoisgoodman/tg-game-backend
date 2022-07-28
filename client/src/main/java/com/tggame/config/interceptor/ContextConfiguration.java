@@ -29,6 +29,9 @@ public class ContextConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //        //会话拦截
         registry.addInterceptor(sessionInterceptor)
-                .excludePathPatterns().addPathPatterns("/**");
+                .excludePathPatterns("/webjars/**",
+                        "/static/**",
+                        "/**doc.html",
+                        "/swagger-resources**").addPathPatterns("/**");
     }
 }

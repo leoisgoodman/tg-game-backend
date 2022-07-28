@@ -10,7 +10,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.core.tools.HttpHeaders;
 import com.tggame.exceptions.UserException;
+import com.tggame.group.entity.Group;
+import com.tggame.group.service.GroupService;
 import com.tggame.user.entity.User;
 import com.tggame.user.service.UserService;
 import com.tggame.user.vo.UserPageVO;
@@ -38,6 +41,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private GroupService groupService;
 
 
     /**
@@ -178,6 +183,25 @@ public class UserController {
                 .eq(User::getUsername, username));
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
+        log.debug(JSON.toJSONString(userVO));
+        return userVO;
+    }
+
+
+    /**
+     * 根据条件username查询群成员一个详情信息
+     *
+     * @param userId 用户id
+     * @return UserVO
+     */
+    @ApiOperation(value = "查询当前用户信息", notes = "查询当前用户信息")
+    @GetMapping("/load/current")
+    public UserVO loadByCurrent(@ApiIgnore @RequestAttribute(HttpHeaders.userId) String userId) {
+        User user = userService.getById(userId);
+        Group group =groupService.getById(user.getGroupId());
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        userVO.setGroupName(group.getName());
         log.debug(JSON.toJSONString(userVO));
         return userVO;
     }

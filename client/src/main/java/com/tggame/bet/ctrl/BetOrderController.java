@@ -15,7 +15,16 @@ import com.tggame.bet.vo.BetOrderSaveVO;
 import com.tggame.bet.vo.BetOrderVO;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
+import com.tggame.core.tools.HttpHeaders;
 import com.tggame.exceptions.BetOrderException;
+import com.tggame.group.entity.Group;
+import com.tggame.group.service.GroupService;
+import com.tggame.open.entity.OpenRecord;
+import com.tggame.open.service.OpenRecordService;
+import com.tggame.trend.entity.TrendRecord;
+import com.tggame.trend.service.TrendRecordService;
+import com.tggame.user.entity.User;
+import com.tggame.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 投注
@@ -39,6 +49,18 @@ public class BetOrderController {
     @Autowired
     private BetOrderService betOrderService;
 
+    @Autowired
+    private OpenRecordService openRecordService;
+
+    @Autowired
+    private TrendRecordService trendRecordService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private GroupService groupService;
+
 
     /**
      * 创建 投注
@@ -48,84 +70,17 @@ public class BetOrderController {
     @ApiOperation(value = "创建BetOrder", notes = "创建BetOrder")
     @PostMapping("/build")
     public BetOrderSaveVO build(@ApiParam(name = "创建BetOrder", value = "传入json格式", required = true)
-                                @RequestBody BetOrderSaveVO betOrderSaveVO) {
-        if (StringUtils.isBlank(betOrderSaveVO.getId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getGroupId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getTgGroupId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getUserId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getTgUserId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBotId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getLotteryId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getLotteryName())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetName())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getBetNum())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
+                                @RequestBody BetOrderSaveVO betOrderSaveVO,
+                                @RequestAttribute(HttpHeaders.userId) String userId) {
 
-        if (StringUtils.isBlank(betOrderSaveVO.getBetType())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-        if (StringUtils.isBlank(betOrderSaveVO.getStatus())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-        if (StringUtils.isBlank(betOrderSaveVO.getOpenId())) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
-        }
-
-
-        int count = betOrderService.count(new LambdaQueryWrapper<BetOrder>()
-                .eq(BetOrder::getId, betOrderSaveVO.getId())
-                .eq(BetOrder::getGroupId, betOrderSaveVO.getGroupId())
-                .eq(BetOrder::getTgGroupId, betOrderSaveVO.getTgGroupId())
-                .eq(BetOrder::getUserId, betOrderSaveVO.getUserId())
-                .eq(BetOrder::getTgUserId, betOrderSaveVO.getTgUserId())
-                .eq(BetOrder::getBotId, betOrderSaveVO.getBotId())
-                .eq(BetOrder::getLotteryId, betOrderSaveVO.getLotteryId())
-                .eq(BetOrder::getLotteryName, betOrderSaveVO.getLotteryName())
-                .eq(BetOrder::getBetId, betOrderSaveVO.getBetId())
-                .eq(BetOrder::getBetName, betOrderSaveVO.getBetName())
-                .eq(BetOrder::getBetNum, betOrderSaveVO.getBetNum())
-                .eq(BetOrder::getOdds, betOrderSaveVO.getOdds())
-                .eq(BetOrder::getBetType, betOrderSaveVO.getBetType())
-                .eq(BetOrder::getPayBackPercent, betOrderSaveVO.getPayBackPercent())
-                .eq(BetOrder::getAmount, betOrderSaveVO.getAmount())
-                .eq(BetOrder::getWinAmount, betOrderSaveVO.getWinAmount())
-                .eq(BetOrder::getShouldPayAmount, betOrderSaveVO.getShouldPayAmount())
-                .eq(BetOrder::getStatus, betOrderSaveVO.getStatus())
-                .eq(BetOrder::getOpenId, betOrderSaveVO.getOpenId())
-                .eq(BetOrder::getCreateTime, betOrderSaveVO.getCreateTime())
-                .eq(BetOrder::getUpdateTime, betOrderSaveVO.getUpdateTime())
-        );
-        if (count > 0) {
-            throw new BetOrderException(BaseException.BaseExceptionEnum.Exists);
-        }
-
+        User user = userService.getById(userId);
+        Group group = groupService.getById(user.getGroupId());
+        betOrderSaveVO.setTgGroupId(group.getTgGroupId());
+        betOrderSaveVO.setTgUserId(user.getTgUserId());
         BetOrder newBetOrder = new BetOrder();
         BeanUtils.copyProperties(betOrderSaveVO, newBetOrder);
 
-        betOrderService.save(newBetOrder);
+        betOrderService.bet(betOrderSaveVO);
 
         betOrderSaveVO = new BetOrderSaveVO();
         BeanUtils.copyProperties(newBetOrder, betOrderSaveVO);
@@ -166,9 +121,10 @@ public class BetOrderController {
             @ApiImplicitParam(name = "updateTimeEnd", value = "更新时间", paramType = "query")
     })
     @GetMapping(value = "/list")
-    public IPage<BetOrderPageVO> list(@ApiIgnore BetOrderPageVO betOrderVO, Integer curPage, Integer pageSize) {
+    public IPage<BetOrderPageVO> list(@ApiIgnore BetOrderPageVO betOrderVO, Integer curPage, Integer pageSize,@RequestAttribute(HttpHeaders.userId) String userId) {
         IPage<BetOrder> page = new Page<>(curPage, pageSize);
         QueryWrapper<BetOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(BetOrder::getUserId,userId);
         if (StringUtils.isNotBlank(betOrderVO.getGroupId())) {
             queryWrapper.lambda().eq(BetOrder::getGroupId, betOrderVO.getGroupId());
         }
@@ -214,9 +170,28 @@ public class BetOrderController {
         int total = betOrderService.count(queryWrapper);
         if (total > 0) {
             queryWrapper.lambda().orderByDesc(BetOrder::getId);
-
             IPage<BetOrder> betOrderPage = betOrderService.page(page, queryWrapper);
             List<BetOrderPageVO> betOrderPageVOList = JSON.parseArray(JSON.toJSONString(betOrderPage.getRecords()), BetOrderPageVO.class);
+            List<String> openIds=
+                  betOrderPageVOList.stream().map(BetOrderPageVO::getOpenId).distinct().collect(Collectors.toList());
+            List<Long> issueIds =
+                   betOrderPageVOList.stream().map(BetOrderPageVO::getIssue).distinct().collect(Collectors.toList());
+            List<OpenRecord> openRecordList =
+                    openRecordService.list(new QueryWrapper<OpenRecord>().lambda().in(OpenRecord::getId,openIds));
+            List<TrendRecord> trendRecordList =
+                  trendRecordService.list(new QueryWrapper<TrendRecord>().lambda().in(TrendRecord::getIssue,issueIds));
+            for(BetOrderPageVO betOrderPageVO : betOrderPageVOList){
+                for(OpenRecord openRecord : openRecordList ){
+                  if(betOrderPageVO.getOpenId().equals(openRecord.getId())){
+                    betOrderPageVO.setBtcValue(openRecord.getNum());
+                  }
+                }
+                for(TrendRecord trendRecord : trendRecordList){
+                  if(betOrderPageVO.getIssue().equals(trendRecord.getIssue())){
+                    betOrderPageVO.setOpenData(trendRecord.getData());
+                  }
+                }
+            }
             IPage<BetOrderPageVO> iPage = new Page<>();
             iPage.setPages(betOrderPage.getPages());
             iPage.setCurrent(curPage);

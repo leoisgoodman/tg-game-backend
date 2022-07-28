@@ -135,4 +135,10 @@ public class BetOrderPageVO extends BaseVO implements java.io.Serializable {
     @ApiModelProperty(value = "更新时间")
     private java.util.Date updateTime;
 
+    @ApiModelProperty(value = "BTC的值")
+    private String  btcValue;
+
+    @ApiModelProperty(value = "開獎的值")
+    private String  openData;
+
 }

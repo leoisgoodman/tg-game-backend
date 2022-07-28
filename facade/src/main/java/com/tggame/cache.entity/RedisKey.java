@@ -5,7 +5,7 @@ public enum RedisKey {
     /**
      * 用户会话市场 5分钟
      */
-    User_Token(5),
+    User_Token(500000),
     ;
 
     private static final String preFix = "tggame";

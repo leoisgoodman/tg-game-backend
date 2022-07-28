@@ -77,13 +77,11 @@ public class BetOrderController {
             throw new BetOrderException(BaseException.BaseExceptionEnum.Empty_Param);
         }
 
-        BetOrder newBetOrder = new BetOrder();
-        BeanUtils.copyProperties(betOrderSaveVO, newBetOrder);
 
-        betOrderService.bet(newBetOrder);
+        betOrderService.bet(betOrderSaveVO);
 
         betOrderSaveVO = new BetOrderSaveVO();
-        BeanUtils.copyProperties(newBetOrder, betOrderSaveVO);
+        BeanUtils.copyProperties(betOrderSaveVO, betOrderSaveVO);
         log.debug(JSON.toJSONString(betOrderSaveVO));
         return betOrderSaveVO;
     }

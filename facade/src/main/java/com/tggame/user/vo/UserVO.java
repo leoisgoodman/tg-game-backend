@@ -115,4 +115,10 @@ public class UserVO implements java.io.Serializable {
     @ApiModelProperty(value = "更新时间")
     private java.util.Date updateTime;
 
+    /**
+     * 群名稱
+     */
+    @ApiModelProperty(value = "群名稱")
+    private String groupName;
+
 }
