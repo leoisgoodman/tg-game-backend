@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @Data
 public final class R implements Serializable {
-    private String info = BaseException.BaseExceptionEnum.Server_Error.msg;
+    private String msg = BaseException.BaseExceptionEnum.Server_Error.msg;
     private Object data = null;
     private String code = BaseException.BaseExceptionEnum.Server_Error.code;
 
@@ -18,8 +18,8 @@ public final class R implements Serializable {
     private R() {
     }
 
-    private R(String code, String info, Object data) {
-        this.info = info;
+    private R(String code, String msg, Object data) {
+        this.msg = msg;
         this.data = data;
         this.code = code;
     }

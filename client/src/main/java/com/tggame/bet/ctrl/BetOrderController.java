@@ -13,6 +13,8 @@ import com.tggame.bet.service.BetOrderService;
 import com.tggame.bet.vo.BetOrderPageVO;
 import com.tggame.bet.vo.BetOrderSaveVO;
 import com.tggame.bet.vo.BetOrderVO;
+import com.tggame.bot.entity.Bot;
+import com.tggame.bot.service.BotService;
 import com.tggame.core.base.BaseException;
 import com.tggame.core.entity.R;
 import com.tggame.core.tools.HttpHeaders;
@@ -21,6 +23,8 @@ import com.tggame.group.entity.Group;
 import com.tggame.group.service.GroupService;
 import com.tggame.open.entity.OpenRecord;
 import com.tggame.open.service.OpenRecordService;
+import com.tggame.tg.entity.TgGroupBot;
+import com.tggame.tg.service.TgGroupBotService;
 import com.tggame.trend.entity.TrendRecord;
 import com.tggame.trend.service.TrendRecordService;
 import com.tggame.user.entity.User;
@@ -61,6 +65,12 @@ public class BetOrderController {
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private TgGroupBotService tgGroupBotService;
+
+    @Autowired
+    private BotService botService;
+
 
     /**
      * 创建 投注
@@ -76,6 +86,10 @@ public class BetOrderController {
         User user = userService.getById(userId);
         Group group = groupService.getById(user.getGroupId());
         betOrderSaveVO.setTgGroupId(group.getTgGroupId());
+        TgGroupBot tgGroupBot = tgGroupBotService.getOne(new QueryWrapper<TgGroupBot>().lambda().eq(TgGroupBot::getGroupId,
+                group.getId()));
+        Bot bot = botService.getById(tgGroupBot.getBotId());
+        betOrderSaveVO.setTgBotId(bot.getTgBotId());
         betOrderSaveVO.setTgUserId(user.getTgUserId());
         BetOrder newBetOrder = new BetOrder();
         BeanUtils.copyProperties(betOrderSaveVO, newBetOrder);
